@@ -70,22 +70,26 @@ const Practice = () => {
 
     setIsSubmitting(true);
     try {
-      const { data, error } = await supabase
+      // IMPORTANT:
+      // We do NOT call .select() here because SELECT on leads is admin-only (RLS).
+      // Instead we generate the id client-side and store it.
+      const newLeadId = crypto.randomUUID();
+
+      const { error } = await supabase
         .from('leads')
         .insert({
+          id: newLeadId,
           name: formData.name,
           mobile: formData.mobile,
           class: formData.classLevel,
           school: formData.school,
           source_page: 'Free Practice',
           interest_type: 'Quiz Started',
-        })
-        .select()
-        .single();
+        });
 
       if (error) throw error;
 
-      setLeadId(data.id);
+      setLeadId(newLeadId);
       setStudentInfo({
         name: formData.name,
         mobile: formData.mobile,

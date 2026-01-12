@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Users, BookOpen, GraduationCap, Gamepad2, LogOut, Download, 
@@ -32,6 +32,17 @@ interface Lead {
   created_at: string;
 }
 
+interface QuizSession {
+  id: string;
+  lead_id: string | null;
+  topic: string;
+  score: number | null;
+  level: string | null;
+  completed: boolean | null;
+  completed_at: string | null;
+  created_at: string;
+}
+
 const sourceColors: Record<string, string> = {
   'Free Practice': 'bg-accent',
   'Career Guidance': 'bg-secondary',
@@ -43,12 +54,29 @@ const sourceColors: Record<string, string> = {
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [quizSessions, setQuizSessions] = useState<QuizSession[]>([]);
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [sourceFilter, setSourceFilter] = useState('all');
   const [classFilter, setClassFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('all');
+
+  const latestSessionByLeadId = useMemo(() => {
+    const map: Record<string, QuizSession> = {};
+    for (const session of quizSessions) {
+      if (!session.lead_id) continue;
+      const existing = map[session.lead_id];
+      if (!existing) {
+        map[session.lead_id] = session;
+        continue;
+      }
+      const existingTime = new Date(existing.created_at).getTime();
+      const newTime = new Date(session.created_at).getTime();
+      if (newTime > existingTime) map[session.lead_id] = session;
+    }
+    return map;
+  }, [quizSessions]);
 
   const stats = [
     { 
@@ -107,13 +135,22 @@ const AdminDashboard = () => {
 
   const fetchLeads = async () => {
     try {
-      const { data, error } = await supabase
-        .from('leads')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const [leadsRes, sessionsRes] = await Promise.all([
+        supabase
+          .from('leads')
+          .select('*')
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('quiz_sessions')
+          .select('*')
+          .order('created_at', { ascending: false }),
+      ]);
 
-      if (error) throw error;
-      setLeads(data || []);
+      if (leadsRes.error) throw leadsRes.error;
+      if (sessionsRes.error) throw sessionsRes.error;
+
+      setLeads(leadsRes.data || []);
+      setQuizSessions(sessionsRes.data || []);
     } catch (error) {
       console.error('Error fetching leads:', error);
       toast.error('Failed to fetch leads');
@@ -179,18 +216,24 @@ const AdminDashboard = () => {
   };
 
   const exportToCSV = () => {
-    const headers = ['Name', 'Mobile', 'Class', 'School', 'Source', 'Interest', 'Date'];
+    const headers = ['Name', 'Mobile', 'Class', 'School', 'Source', 'Quiz Topic', 'Quiz Score', 'Quiz Level', 'Interest', 'Date'];
     const csvContent = [
       headers.join(','),
-      ...filteredLeads.map(lead => [
-        `"${lead.name}"`,
-        lead.mobile,
-        lead.class || '',
-        `"${lead.school || ''}"`,
-        lead.source_page,
-        lead.interest_type || '',
-        new Date(lead.created_at).toLocaleDateString(),
-      ].join(','))
+      ...filteredLeads.map(lead => {
+        const session = latestSessionByLeadId[lead.id];
+        return [
+          `"${lead.name}"`,
+          lead.mobile,
+          lead.class || '',
+          `"${lead.school || ''}"`,
+          lead.source_page,
+          session?.topic ?? '',
+          session?.score ?? '',
+          session?.level ?? '',
+          lead.interest_type || lead.career_interest || lead.product_interest || '',
+          new Date(lead.created_at).toLocaleDateString(),
+        ].join(',');
+      })
     ].join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -330,48 +373,64 @@ const AdminDashboard = () => {
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Mobile</TableHead>
-                      <TableHead>Class</TableHead>
-                      <TableHead>School</TableHead>
-                      <TableHead>Source</TableHead>
-                      <TableHead>Interest</TableHead>
-                      <TableHead>Date</TableHead>
-                    </TableRow>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Mobile</TableHead>
+                        <TableHead>Class</TableHead>
+                        <TableHead>School</TableHead>
+                        <TableHead>Source</TableHead>
+                        <TableHead>Quiz Topic</TableHead>
+                        <TableHead>Score</TableHead>
+                        <TableHead>Level</TableHead>
+                        <TableHead>Interest</TableHead>
+                        <TableHead>Date</TableHead>
+                      </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredLeads.map((lead) => (
-                      <TableRow key={lead.id}>
-                        <TableCell className="font-medium">{lead.name}</TableCell>
-                        <TableCell>
-                          <a href={`tel:${lead.mobile}`} className="text-primary hover:underline">
-                            {lead.mobile}
-                          </a>
-                        </TableCell>
-                        <TableCell>{lead.class || '-'}</TableCell>
-                        <TableCell className="max-w-[150px] truncate">{lead.school || '-'}</TableCell>
-                        <TableCell>
-                          <Badge 
-                            className={`${sourceColors[lead.source_page] || 'bg-muted'} text-white`}
-                          >
-                            {lead.source_page}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-sm text-muted-foreground">
-                          {lead.interest_type || lead.career_interest || lead.product_interest || '-'}
-                        </TableCell>
-                        <TableCell className="text-sm text-muted-foreground">
-                          {new Date(lead.created_at).toLocaleDateString('en-IN', {
-                            day: '2-digit',
-                            month: 'short',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {filteredLeads.map((lead) => {
+                      const session = latestSessionByLeadId[lead.id];
+
+                      return (
+                        <TableRow key={lead.id}>
+                          <TableCell className="font-medium">{lead.name}</TableCell>
+                          <TableCell>
+                            <a href={`tel:${lead.mobile}`} className="text-primary hover:underline">
+                              {lead.mobile}
+                            </a>
+                          </TableCell>
+                          <TableCell>{lead.class || '-'}</TableCell>
+                          <TableCell className="max-w-[150px] truncate">{lead.school || '-'}</TableCell>
+                          <TableCell>
+                            <Badge 
+                              className={`${sourceColors[lead.source_page] || 'bg-muted'} text-white`}
+                            >
+                              {lead.source_page}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {session?.topic || '-'}
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {typeof session?.score === 'number' ? session.score : '-'}
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {session?.level || '-'}
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {lead.interest_type || lead.career_interest || lead.product_interest || '-'}
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {new Date(lead.created_at).toLocaleDateString('en-IN', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </div>

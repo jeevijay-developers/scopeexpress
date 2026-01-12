@@ -91,10 +91,17 @@ export const QuizGame = ({ topic, classLevel, leadId, onEnd }: QuizGameProps) =>
   // Create quiz session
   useEffect(() => {
     const createSession = async () => {
+      // IMPORTANT:
+      // SELECT on quiz_sessions is admin-only (RLS). So we generate the id client-side
+      // and insert without requesting the row back.
+      const newSessionId = crypto.randomUUID();
+      setSessionId(newSessionId);
+
       try {
-        const { data, error } = await supabase
+        const { error } = await supabase
           .from('quiz_sessions')
           .insert({
+            id: newSessionId,
             lead_id: leadId,
             topic: topic,
             completed: false,
@@ -102,15 +109,12 @@ export const QuizGame = ({ topic, classLevel, leadId, onEnd }: QuizGameProps) =>
             correct_answers: 0,
             questions_attempted: 0,
             level: 'Beginner'
-          })
-          .select()
-          .single();
+          });
 
-        if (!error && data) {
-          setSessionId(data.id);
-        }
+        if (error) throw error;
       } catch (err) {
         console.error('Error creating session:', err);
+        setSessionId(null);
       }
     };
 
