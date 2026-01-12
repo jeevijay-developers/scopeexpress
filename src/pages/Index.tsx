@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 import { 
   BookOpen, GraduationCap, Gamepad2, ShoppingBag, ArrowRight, Star, Users, Trophy, 
   CheckCircle, Sparkles, Target, Zap, Clock, Award, TrendingUp, Heart,
-  Brain, Calculator, Globe, FlaskConical
+  Brain, Calculator, Globe, FlaskConical, Play, Flame, Shield, Timer, Crown,
+  Rocket, Medal, PartyPopper, Gift
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,6 +14,7 @@ import heroStudents from '@/assets/hero-students.jpg';
 import studentSuccess from '@/assets/student-success.jpg';
 import libraryInterior from '@/assets/library-interior.jpg';
 import medineeKumar from '@/assets/medinee-kumar.png';
+import quizFun from '@/assets/quiz-fun.jpg';
 
 const Index = () => {
   const { t, language } = useLanguage();
@@ -60,7 +62,7 @@ const Index = () => {
   ];
 
   const benefits = [
-    { icon: CheckCircle, text: language === 'hi' ? 'IIT Madras अनुभव' : 'IIT Madras Experience' },
+    { icon: CheckCircle, text: language === 'hi' ? 'इंजीनियर मेंटर' : 'Engineer Mentor' },
     { icon: CheckCircle, text: language === 'hi' ? 'व्यक्तिगत ध्यान' : 'Personal Attention' },
     { icon: CheckCircle, text: language === 'hi' ? 'गुणवत्तापूर्ण मार्गदर्शन' : 'Quality Guidance' },
     { icon: CheckCircle, text: language === 'hi' ? 'सफलता गारंटी' : 'Success Guarantee' },
@@ -99,6 +101,13 @@ const Index = () => {
     { icon: FlaskConical, name: language === 'hi' ? 'विज्ञान' : 'Science', color: 'bg-success' },
     { icon: Globe, name: language === 'hi' ? 'सामान्य ज्ञान' : 'GK', color: 'bg-warning' },
     { icon: BookOpen, name: language === 'hi' ? 'इतिहास' : 'History', color: 'bg-secondary' },
+  ];
+
+  const quizFeatures = [
+    { icon: Flame, text: language === 'hi' ? 'स्ट्रीक बोनस' : 'Streak Bonus', color: 'text-orange-500' },
+    { icon: Timer, text: language === 'hi' ? '30 सेकंड टाइमर' : '30 Sec Timer', color: 'text-blue-500' },
+    { icon: Heart, text: language === 'hi' ? '3 लाइव्स' : '3 Lives', color: 'text-red-500' },
+    { icon: Crown, text: language === 'hi' ? 'चैंपियन बनो' : 'Become Champion', color: 'text-yellow-500' },
   ];
 
   return (
@@ -205,6 +214,165 @@ const Index = () => {
         </div>
       </section>
 
+      {/* ARCADE QUIZ MOCKUP SECTION */}
+      <section className="py-16 md:py-24 bg-gradient-to-b from-gray-900 via-purple-900 to-gray-900 relative overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-pink-500/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/2 w-60 h-60 bg-yellow-500/10 rounded-full blur-3xl animate-bounce-slow"></div>
+          
+          {/* Grid Pattern */}
+          <div className="absolute inset-0 opacity-10" style={{
+            backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+            backgroundSize: '50px 50px'
+          }}></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-yellow-500 text-white px-6 py-2 rounded-full mb-6 animate-bounce-slow">
+              <Gamepad2 className="h-5 w-5" />
+              <span className="font-bold text-sm">{language === 'hi' ? '🎮 आर्केड क्विज़ ज़ोन' : '🎮 ARCADE QUIZ ZONE'}</span>
+            </div>
+            
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-400">
+                {language === 'hi' ? 'खेलो. सीखो. जीतो!' : 'PLAY. LEARN. WIN!'}
+              </span>
+            </h2>
+            
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              {language === 'hi' 
+                ? 'रेट्रो आर्केड स्टाइल में क्विज़ खेलें और Champion बनें!'
+                : 'Experience retro arcade-style quizzes and become the Champion!'}
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Quiz Mockup Card */}
+            <div className="relative">
+              <div className="bg-gray-800 rounded-3xl p-6 border-4 border-cyan-500/50 shadow-2xl shadow-cyan-500/20 transform hover:scale-105 transition-all duration-500">
+                {/* Arcade Header */}
+                <div className="flex justify-between items-center mb-6">
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1">
+                      {[1, 2, 3].map((_, i) => (
+                        <Heart key={i} className="h-6 w-6 text-red-500 fill-red-500 animate-pulse" />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-r from-yellow-500 to-orange-500 px-4 py-2 rounded-full">
+                    <span className="text-black font-bold flex items-center gap-1">
+                      <Flame className="h-4 w-4" /> 5 STREAK
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-cyan-400 text-2xl font-bold font-mono">1,250</p>
+                    <p className="text-xs text-gray-400">SCORE</p>
+                  </div>
+                </div>
+
+                {/* Timer Bar */}
+                <div className="w-full bg-gray-700 rounded-full h-3 mb-6 overflow-hidden">
+                  <div className="bg-gradient-to-r from-green-500 via-yellow-500 to-red-500 h-full w-3/4 rounded-full animate-pulse"></div>
+                </div>
+
+                {/* Question */}
+                <div className="bg-gray-900/50 rounded-2xl p-6 mb-6 border border-gray-700">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="bg-primary px-3 py-1 rounded-full text-xs text-white">Q.5</span>
+                    <span className="text-gray-400 text-sm">Class 10 • Science</span>
+                  </div>
+                  <p className="text-white text-lg font-medium">
+                    {language === 'hi' 
+                      ? 'पृथ्वी का सबसे गर्म स्थान कौन सा है?'
+                      : 'What is the hottest place on Earth?'}
+                  </p>
+                </div>
+
+                {/* Options */}
+                <div className="grid grid-cols-2 gap-3">
+                  {['Death Valley', 'Sahara Desert', 'Lut Desert', 'Danakil Depression'].map((option, i) => (
+                    <button
+                      key={i}
+                      className={`p-4 rounded-xl font-medium transition-all duration-300 text-left ${
+                        i === 2 
+                          ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white scale-105 shadow-lg shadow-green-500/30' 
+                          : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      }`}
+                    >
+                      <span className="text-sm opacity-60">#{String.fromCharCode(65 + i)}</span>
+                      <p className="font-bold">{option}</p>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Correct Animation */}
+                <div className="mt-6 text-center">
+                  <div className="inline-flex items-center gap-2 bg-green-500/20 text-green-400 px-6 py-3 rounded-full animate-bounce">
+                    <PartyPopper className="h-5 w-5" />
+                    <span className="font-bold">{language === 'hi' ? '+50 बोनस पॉइंट्स!' : '+50 BONUS POINTS!'}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Elements */}
+              <div className="absolute -top-6 -left-6 bg-yellow-500 text-black px-4 py-2 rounded-full font-bold shadow-lg animate-bounce-slow">
+                🏆 LEVEL 3
+              </div>
+              <div className="absolute -bottom-6 -right-6 bg-pink-500 text-white px-4 py-2 rounded-full font-bold shadow-lg animate-float">
+                ⚡ x2 COMBO
+              </div>
+            </div>
+
+            {/* Features */}
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                {quizFeatures.map((feature, i) => (
+                  <div key={i} className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-xl border border-gray-700 hover:border-cyan-500/50 transition-all">
+                    <feature.icon className={`h-8 w-8 ${feature.color} mb-2`} />
+                    <p className="text-white font-bold">{feature.text}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700">
+                <h3 className="text-white font-bold text-xl mb-4 flex items-center gap-2">
+                  <Rocket className="h-5 w-5 text-cyan-400" />
+                  {language === 'hi' ? 'क्विज़ टॉपिक्स' : 'Quiz Topics'}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {quizTopics.map((topic, i) => (
+                    <div key={i} className={`flex items-center gap-2 ${topic.color} text-white px-4 py-2 rounded-full`}>
+                      <topic.icon className="h-4 w-4" />
+                      <span className="text-sm font-medium">{topic.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-cyan-500/20 to-pink-500/20 p-6 rounded-xl border border-cyan-500/30">
+                <div className="flex items-center gap-3 mb-4">
+                  <Gift className="h-8 w-8 text-yellow-400" />
+                  <div>
+                    <p className="text-white font-bold text-lg">{language === 'hi' ? '100% मुफ़्त!' : '100% FREE!'}</p>
+                    <p className="text-gray-400 text-sm">{language === 'hi' ? 'कोई लॉगिन नहीं चाहिए' : 'No login required'}</p>
+                  </div>
+                </div>
+              </div>
+
+              <Button asChild size="lg" className="w-full bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 hover:opacity-90 text-lg py-6 group">
+                <Link to="/practice" className="flex items-center justify-center gap-2">
+                  <Play className="h-6 w-6 group-hover:scale-110 transition-transform" />
+                  {language === 'hi' ? 'अभी खेलना शुरू करें!' : 'START PLAYING NOW!'}
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Founder Section - Medinee Kumar */}
       <section className="py-16 bg-gradient-to-r from-primary/5 to-secondary/5">
         <div className="container mx-auto px-4">
@@ -217,8 +385,8 @@ const Index = () => {
                   className="w-full max-w-md mx-auto rounded-3xl shadow-2xl"
                 />
                 <div className="absolute -bottom-4 -right-4 bg-primary text-primary-foreground px-6 py-3 rounded-2xl shadow-lg">
-                  <p className="font-bold">IIT Madras</p>
-                  <p className="text-sm opacity-90">Alumni</p>
+                  <p className="font-bold">Mechanical Engineer</p>
+                  <p className="text-sm opacity-90">Educator & Mentor</p>
                 </div>
               </div>
             </div>
@@ -236,13 +404,13 @@ const Index = () => {
               </h2>
               
               <p className="text-xl text-primary font-medium mb-4">
-                {language === 'hi' ? 'IIT मद्रास से अमरपाटन तक का सफर' : 'From IIT Madras to Amarpatan'}
+                {language === 'hi' ? 'मैकेनिकल इंजीनियर से अमरपाटन तक का सफर' : 'From Mechanical Engineer to Amarpatan'}
               </p>
               
               <p className="text-muted-foreground mb-6 leading-relaxed">
                 {language === 'hi' 
-                  ? 'एक छोटे से गाँव से IIT Madras तक का सफर। अब वही अनुभव और मार्गदर्शन अमरपाटन के हर छात्र के लिए उपलब्ध है। Scope Express के माध्यम से, मेदिनी कुमार जी हर student को उनके सपनों तक पहुंचने में मदद कर रहे हैं।'
-                  : 'From a small village to IIT Madras - a journey of dedication and hard work. Now, the same experience and guidance is available for every student in Amarpatan. Through Scope Express, Medinee Kumar is helping every student reach their dreams.'}
+                  ? 'एक छोटे से गाँव से इंजीनियर तक का सफर। अब वही अनुभव और मार्गदर्शन अमरपाटन के हर छात्र के लिए उपलब्ध है। Scope Express के माध्यम से, मेदिनी कुमार जी हर student को उनके सपनों तक पहुंचने में मदद कर रहे हैं।'
+                  : 'From a small village to becoming an Engineer - a journey of dedication and hard work. Now, the same experience and guidance is available for every student in Amarpatan. Through Scope Express, Medinee Kumar is helping every student reach their dreams.'}
               </p>
               
               <div className="grid grid-cols-2 gap-4 mb-6">
@@ -420,79 +588,54 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Quiz Preview Section */}
+      {/* Career Paths Preview */}
       <section className="py-16 md:py-24 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 bg-accent/10 text-accent px-4 py-2 rounded-full mb-4">
-                <Gamepad2 className="h-4 w-4" />
-                <span className="text-sm font-medium">100% FREE</span>
-              </div>
-              
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                {language === 'hi' ? '🎮 खेलो, सीखो, आगे बढ़ो!' : '🎮 Play, Learn, Grow!'}
-              </h2>
-              
-              <p className="text-muted-foreground mb-6 text-lg">
-                {language === 'hi' 
-                  ? 'हमारे gamified practice zone में 5 topics में class-wise questions के साथ practice करें। Points कमाएं, levels unlock करें, और Champion बनें!'
-                  : 'Practice with class-wise questions in 5 topics in our gamified practice zone. Earn points, unlock levels, and become a Champion!'}
-              </p>
-              
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                <div className="flex items-center gap-3 p-4 bg-card rounded-xl shadow-sm">
-                  <Zap className="h-6 w-6 text-warning" />
-                  <div>
-                    <p className="font-semibold">{language === 'hi' ? 'तुरंत शुरू करें' : 'Instant Start'}</p>
-                    <p className="text-xs text-muted-foreground">No login needed</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 bg-card rounded-xl shadow-sm">
-                  <Star className="h-6 w-6 text-primary" />
-                  <div>
-                    <p className="font-semibold">{language === 'hi' ? 'Points कमाएं' : 'Earn Points'}</p>
-                    <p className="text-xs text-muted-foreground">+10 per correct</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 bg-card rounded-xl shadow-sm">
-                  <Trophy className="h-6 w-6 text-secondary" />
-                  <div>
-                    <p className="font-semibold">{language === 'hi' ? '4 Levels' : '4 Levels'}</p>
-                    <p className="text-xs text-muted-foreground">Beginner to Champion</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 bg-card rounded-xl shadow-sm">
-                  <Clock className="h-6 w-6 text-accent" />
-                  <div>
-                    <p className="font-semibold">{language === 'hi' ? 'Sound Effects' : 'Sound Effects'}</p>
-                    <p className="text-xs text-muted-foreground">Fun audio feedback</p>
-                  </div>
-                </div>
-              </div>
-              
-              <Button asChild size="lg" className="bg-gradient-accent">
-                <Link to="/practice">
-                  {language === 'hi' ? 'अभी खेलें - FREE!' : 'Play Now - FREE!'}
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-2 rounded-full mb-4">
+              <GraduationCap className="h-4 w-4" />
+              <span className="text-sm font-medium">{language === 'hi' ? '30+ करियर पाथ्स' : '30+ Career Paths'}</span>
             </div>
-            
-            <div className="relative">
-              <img 
-                src={studentSuccess} 
-                alt="Quiz Success" 
-                className="rounded-3xl shadow-2xl"
-              />
-              <div className="absolute -top-4 -left-4 bg-card p-4 rounded-2xl shadow-xl animate-bounce-slow">
-                <p className="text-2xl font-bold text-primary">🏆</p>
-                <p className="text-sm font-medium">Champion!</p>
-              </div>
-              <div className="absolute -bottom-4 -right-4 bg-success text-white px-6 py-3 rounded-2xl shadow-xl animate-float">
-                <p className="font-bold">+10 Points!</p>
-              </div>
-            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              {language === 'hi' ? '🎯 अपना सही करियर खोजें' : '🎯 Find Your Perfect Career'}
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              {language === 'hi' 
+                ? 'Engineering, Medical, Defence, Commerce और अन्य कई विकल्पों में से चुनें'
+                : 'Choose from Engineering, Medical, Defence, Commerce and many more options'}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            {[
+              { icon: '💻', title: 'Tech', count: '8+', color: 'bg-blue-500' },
+              { icon: '⚕️', title: 'Medical', count: '6+', color: 'bg-red-500' },
+              { icon: '🛡️', title: 'Defence', count: '5+', color: 'bg-green-700' },
+              { icon: '📊', title: 'Commerce', count: '6+', color: 'bg-indigo-600' },
+              { icon: '⚙️', title: 'Engineering', count: '4+', color: 'bg-orange-500' },
+              { icon: '🏛️', title: 'Admin', count: '4+', color: 'bg-amber-600' },
+              { icon: '⚖️', title: 'Law', count: '3+', color: 'bg-purple-600' },
+              { icon: '🎨', title: 'Arts', count: '4+', color: 'bg-pink-500' },
+            ].map((category, i) => (
+              <Card key={i} className="card-hover text-center overflow-hidden group">
+                <CardContent className="p-6">
+                  <div className={`w-14 h-14 ${category.color} rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl group-hover:scale-110 transition-transform`}>
+                    {category.icon}
+                  </div>
+                  <h3 className="font-bold">{category.title}</h3>
+                  <p className="text-sm text-muted-foreground">{category.count} careers</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Button asChild size="lg" className="bg-gradient-secondary">
+              <Link to="/career">
+                {language === 'hi' ? 'सभी करियर देखें' : 'Explore All Careers'}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
