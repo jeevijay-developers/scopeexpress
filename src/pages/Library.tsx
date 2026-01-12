@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { 
   Snowflake, Wifi, MonitorSmartphone, BatteryCharging, Cctv, ArrowRight, CheckCircle,
-  Clock, Users, Star, MapPin, Phone, Sparkles, BookOpen, Coffee, Zap
+  Clock, Users, Star, MapPin, Phone, Sparkles, BookOpen, Coffee, Zap, Crown,
+  Shield, Headphones, Lamp, Volume2, GraduationCap
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,12 +18,12 @@ import heroStudents from '@/assets/hero-students.jpg';
 import medineeKumar from '@/assets/medinee-kumar.png';
 
 const facilities = [
-  { icon: Snowflake, key: 'ac', desc: 'Full AC Environment' },
-  { icon: Wifi, key: 'wifi', desc: 'High-Speed Internet' },
-  { icon: MonitorSmartphone, key: 'desk', desc: 'Personal Study Desk' },
-  { icon: BatteryCharging, key: 'charging', desc: 'Charging Points' },
-  { icon: Cctv, key: 'cctv', desc: '24/7 Security' },
-  { icon: Coffee, key: 'water', desc: 'Water Dispenser' },
+  { icon: Snowflake, key: 'ac', desc: 'Full AC', color: 'bg-blue-500' },
+  { icon: Wifi, key: 'wifi', desc: 'High-Speed WiFi', color: 'bg-green-500' },
+  { icon: MonitorSmartphone, key: 'desk', desc: 'Personal Desk', color: 'bg-purple-500' },
+  { icon: BatteryCharging, key: 'charging', desc: 'Power Points', color: 'bg-yellow-500' },
+  { icon: Cctv, key: 'cctv', desc: '24/7 CCTV', color: 'bg-red-500' },
+  { icon: Coffee, key: 'water', desc: 'Water & Tea', color: 'bg-orange-500' },
 ];
 
 const timings = [
@@ -33,6 +34,12 @@ const timings = [
 ];
 
 const classes = ['6', '7', '8', '9', '10', '11', '12', 'College', 'Competitive Exams'];
+
+const plans = [
+  { name: 'Basic', price: '₹500', features: ['General Seating', 'WiFi Access', 'Locker', '6AM-6PM'] },
+  { name: 'Standard', price: '₹700', features: ['AC Zone', 'WiFi + Power', 'Locker', '6AM-10PM'], popular: true },
+  { name: 'Premium', price: '₹900', features: ['Private Cabin', 'All Amenities', 'Priority Support', '24/7 Access'] },
+];
 
 const Library = () => {
   const { t, language } = useLanguage();
@@ -81,148 +88,61 @@ const Library = () => {
     { icon: Zap, text: language === 'hi' ? 'Focus बढ़ता है' : 'Increases Focus' },
   ];
 
+  const stats = [
+    { value: '100+', label: language === 'hi' ? 'सीटें' : 'Seats' },
+    { value: '16hrs', label: language === 'hi' ? 'खुला' : 'Open' },
+    { value: '500+', label: language === 'hi' ? 'स्टूडेंट्स' : 'Students' },
+    { value: '#1', label: language === 'hi' ? 'रेटिंग' : 'Rating' },
+  ];
+
   return (
     <Layout>
       {/* Hero Banner */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img src={libraryInterior} alt="Library" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/70 to-foreground/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-foreground/95 via-foreground/80 to-foreground/60"></div>
         </div>
         
-        <div className="relative container mx-auto px-4 py-20 md:py-28">
+        {/* Floating Elements */}
+        <div className="absolute top-20 right-20 text-6xl animate-float hidden md:block">📚</div>
+        <div className="absolute bottom-20 right-40 text-5xl animate-float hidden md:block" style={{ animationDelay: '0.5s' }}>✨</div>
+        
+        <div className="relative container mx-auto px-4 py-20 md:py-32">
           <div className="max-w-2xl text-white">
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6 animate-fade-in">
-              <Sparkles className="h-4 w-4" />
-              <span className="text-sm font-medium">
-                {language === 'hi' ? 'अमरपाटन की #1 Library' : '#1 Library in Amarpatan'}
+              <Crown className="h-4 w-4 text-warning" />
+              <span className="text-sm font-bold">
+                {language === 'hi' ? '🏆 अमरपाटन की #1 Library' : '🏆 #1 Library in Amarpatan'}
               </span>
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <h1 className="text-4xl md:text-6xl font-black mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
               {t('library.title')}
             </h1>
             
-            <p className="text-xl md:text-2xl text-white/90 mb-6 animate-fade-in" style={{ animationDelay: '0.15s' }}>
-              {t('library.subtitle')}
+            <p className="text-xl md:text-2xl text-white/90 mb-8 animate-fade-in" style={{ animationDelay: '0.15s' }}>
+              {language === 'hi' 
+                ? 'AC Environment • Personal Desk • High-Speed WiFi • शांत माहौल में पढ़ाई करें!'
+                : 'AC Environment • Personal Desk • High-Speed WiFi • Study in peaceful environment!'}
             </p>
             
-            <div className="flex items-center gap-6 mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <div className="text-center">
-                <p className="text-4xl font-bold text-primary">{t('library.pricing')}</p>
-                <p className="text-sm text-white/70">{language === 'hi' ? 'केवल' : 'Only'}</p>
-              </div>
-              <div className="h-12 w-px bg-white/30"></div>
-              <div className="flex flex-wrap gap-2">
-                {benefits.map((b, i) => (
-                  <div key={i} className="flex items-center gap-1 bg-white/10 px-3 py-1 rounded-full text-sm">
-                    <b.icon className="h-3 w-3" />
-                    {b.text}
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            <Button size="lg" className="bg-primary hover:bg-primary/90 animate-fade-in" style={{ animationDelay: '0.25s' }}>
-              {language === 'hi' ? 'अभी Join करें' : 'Join Now'} →
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Facilities */}
-      <section className="py-12 md:py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">
-            {language === 'hi' ? '✨ हमारी सुविधाएं' : '✨ Our Facilities'}
-          </h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {facilities.map((facility, i) => (
-              <Card key={i} className="text-center card-hover">
-                <CardContent className="p-6">
-                  <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                    <facility.icon className="h-7 w-7 text-primary" />
-                  </div>
-                  <p className="font-semibold text-sm">{t(`library.facility.${facility.key}`)}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{facility.desc}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Why Our Library */}
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-6">
-                {language === 'hi' ? '📚 हमारी Library क्यों?' : '📚 Why Our Library?'}
-              </h2>
-              
-              <div className="space-y-4">
-                {[
-                  { title: language === 'hi' ? 'शांत और AC माहौल' : 'Peaceful AC Environment', desc: language === 'hi' ? 'पूरी तरह से air-conditioned, distraction-free study zone' : 'Fully air-conditioned, distraction-free study zone' },
-                  { title: language === 'hi' ? 'Individual Study Desks' : 'Individual Study Desks', desc: language === 'hi' ? 'हर student के लिए personal desk और proper lighting' : 'Personal desk and proper lighting for every student' },
-                  { title: language === 'hi' ? 'लंबे समय तक खुला' : 'Extended Hours', desc: language === 'hi' ? 'सुबह 6 बजे से रात 10 बजे तक - 16 घंटे' : '6 AM to 10 PM - 16 hours daily' },
-                  { title: language === 'hi' ? 'Competition Books' : 'Competition Books', desc: language === 'hi' ? 'JEE, NEET, UPSC और अन्य exams की books उपलब्ध' : 'Books available for JEE, NEET, UPSC and other exams' },
-                  { title: language === 'hi' ? 'High-Speed Wi-Fi' : 'High-Speed Wi-Fi', desc: language === 'hi' ? 'Online resources और video lectures के लिए fast internet' : 'Fast internet for online resources and video lectures' },
-                  { title: language === 'hi' ? 'Security & CCTV' : 'Security & CCTV', desc: language === 'hi' ? '24/7 CCTV surveillance और safe environment' : '24/7 CCTV surveillance and safe environment' },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3 p-4 bg-card rounded-xl shadow-sm">
-                    <CheckCircle className="h-5 w-5 text-success mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="font-semibold">{item.title}</p>
-                      <p className="text-sm text-muted-foreground">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            <div className="relative">
-              <img 
-                src={heroStudents} 
-                alt="Students in library" 
-                className="rounded-3xl shadow-2xl"
-              />
-              <div className="absolute -bottom-6 -left-6 bg-card p-4 rounded-2xl shadow-xl">
-                <div className="flex items-center gap-3">
-                  <img src={medineeKumar} alt="Medinee Kumar" className="w-12 h-12 rounded-full object-cover" />
-                  <div>
-                    <p className="font-semibold">Medinee Kumar</p>
-                    <p className="text-xs text-muted-foreground">Founder</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Banner */}
-      <section className="py-12 bg-gradient-hero text-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <p className="text-white/80 mb-2">{language === 'hi' ? 'Monthly Membership' : 'Monthly Membership'}</p>
-            <h2 className="text-5xl md:text-7xl font-bold mb-4">{t('library.pricing')}</h2>
-            <p className="text-white/80 mb-6">{language === 'hi' ? 'सभी सुविधाओं के साथ Unlimited Access' : 'Unlimited Access with All Facilities'}</p>
-            
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              {['AC', 'Wi-Fi', 'Individual Desk', 'Charging', 'CCTV', 'Books'].map((f, i) => (
-                <div key={i} className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm">
-                  ✓ {f}
+            {/* Stats Row */}
+            <div className="grid grid-cols-4 gap-4 mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              {stats.map((stat, i) => (
+                <div key={i} className="text-center bg-white/10 backdrop-blur-sm rounded-2xl p-4">
+                  <p className="text-2xl md:text-3xl font-black text-primary">{stat.value}</p>
+                  <p className="text-xs text-white/70">{stat.label}</p>
                 </div>
               ))}
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="text-lg">
-                {language === 'hi' ? 'अभी Enquire करें' : 'Enquire Now'} →
+            <div className="flex flex-wrap gap-4 animate-fade-in" style={{ animationDelay: '0.25s' }}>
+              <Button size="lg" className="h-14 px-8 bg-primary hover:bg-primary/90 text-lg rounded-2xl shadow-lg">
+                {language === 'hi' ? 'अभी Join करें' : 'Join Now'} 
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button size="lg" variant="outline" className="text-lg border-white text-white hover:bg-white/20">
+              <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-2xl border-white/30 text-white hover:bg-white/10">
                 <Phone className="mr-2 h-5 w-5" />
                 +91 62653 68438
               </Button>
@@ -231,45 +151,180 @@ const Library = () => {
         </div>
       </section>
 
-      {/* Location & Timings */}
+      {/* Facilities Grid */}
       <section className="py-12 md:py-16 bg-muted/30">
         <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-4">
+            {language === 'hi' ? '✨ प्रीमियम सुविधाएं' : '✨ Premium Facilities'}
+          </h2>
+          <p className="text-center text-muted-foreground mb-10">
+            {language === 'hi' ? 'सबकुछ जो आपको पढ़ाई में चाहिए' : 'Everything you need for focused study'}
+          </p>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {facilities.map((facility, i) => (
+              <Card key={i} className="text-center card-hover animate-fade-in" style={{ animationDelay: `${i * 0.05}s` }}>
+                <CardContent className="p-6">
+                  <div className={`w-16 h-16 ${facility.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                    <facility.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <p className="font-bold">{t(`library.facility.${facility.key}`)}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{facility.desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Plans */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-4">
+            {language === 'hi' ? '💰 मेम्बरशिप प्लान' : '💰 Membership Plans'}
+          </h2>
+          <p className="text-center text-muted-foreground mb-10">
+            {language === 'hi' ? 'अपनी जरूरत के हिसाब से प्लान चुनें' : 'Choose a plan that fits your needs'}
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            {plans.map((plan, i) => (
+              <Card 
+                key={i} 
+                className={`relative overflow-hidden animate-fade-in ${
+                  plan.popular ? 'border-2 border-primary shadow-xl scale-105' : ''
+                }`}
+                style={{ animationDelay: `${i * 0.1}s` }}
+              >
+                {plan.popular && (
+                  <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-4 py-1 text-sm font-bold rounded-bl-xl">
+                    POPULAR
+                  </div>
+                )}
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
+                  <p className="text-4xl font-black text-primary mb-4">{plan.price}<span className="text-sm text-muted-foreground font-normal">/month</span></p>
+                  
+                  <div className="space-y-3 mb-6">
+                    {plan.features.map((feature, j) => (
+                      <div key={j} className="flex items-center gap-2">
+                        <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />
+                        <span className="text-sm">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <Button className={`w-full ${plan.popular ? 'bg-primary' : ''}`} variant={plan.popular ? 'default' : 'outline'}>
+                    {language === 'hi' ? 'चुनें' : 'Select'}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Our Library */}
+      <section className="py-12 md:py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="order-2 lg:order-1">
+              <h2 className="text-2xl md:text-4xl font-bold mb-6">
+                {language === 'hi' ? '📚 हमारी Library क्यों?' : '📚 Why Our Library?'}
+              </h2>
+              
+              <div className="grid gap-4">
+                {[
+                  { icon: Snowflake, title: language === 'hi' ? 'पूर्ण AC माहौल' : 'Full AC Environment', desc: language === 'hi' ? 'गर्मी में भी ठंडा और आरामदायक' : 'Cool and comfortable even in summer' },
+                  { icon: Lamp, title: language === 'hi' ? 'अच्छी रोशनी' : 'Proper Lighting', desc: language === 'hi' ? 'आंखों पर कम stress' : 'Less strain on eyes' },
+                  { icon: Volume2, title: language === 'hi' ? 'शांत वातावरण' : 'Silent Environment', desc: language === 'hi' ? 'कोई distraction नहीं' : 'No distractions' },
+                  { icon: Shield, title: language === 'hi' ? '24/7 सुरक्षा' : '24/7 Security', desc: language === 'hi' ? 'CCTV और guard' : 'CCTV and guards' },
+                  { icon: GraduationCap, title: language === 'hi' ? 'Competition Books' : 'Competition Books', desc: language === 'hi' ? 'JEE, NEET, UPSC की किताबें' : 'JEE, NEET, UPSC books available' },
+                  { icon: Headphones, title: language === 'hi' ? 'Online Classes' : 'Online Classes', desc: language === 'hi' ? 'High-speed WiFi' : 'High-speed WiFi' },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-4 p-4 bg-card rounded-2xl shadow-sm animate-fade-in" style={{ animationDelay: `${i * 0.05}s` }}>
+                    <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <item.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-bold">{item.title}</p>
+                      <p className="text-sm text-muted-foreground">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="relative order-1 lg:order-2">
+              <img 
+                src={heroStudents} 
+                alt="Students in library" 
+                className="rounded-3xl shadow-2xl"
+              />
+              <div className="absolute -bottom-6 -left-6 bg-card p-4 rounded-2xl shadow-xl animate-bounce-slow">
+                <div className="flex items-center gap-3">
+                  <img src={medineeKumar} alt="Medinee Kumar" className="w-14 h-14 rounded-xl object-cover" />
+                  <div>
+                    <p className="font-bold">Medinee Kumar</p>
+                    <p className="text-xs text-muted-foreground">Founder</p>
+                    <div className="flex gap-0.5 mt-1">
+                      {[1,2,3,4,5].map(i => <Star key={i} className="h-3 w-3 fill-warning text-warning" />)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="absolute -top-4 -right-4 bg-success text-success-foreground px-4 py-2 rounded-2xl shadow-lg animate-float">
+                <p className="font-bold text-sm">🎯 Focus Zone</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Location & Timings */}
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-8">
-            <Card>
+            <Card className="shadow-xl animate-fade-in">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-primary" />
+                  <div className="w-10 h-10 bg-warning/10 rounded-xl flex items-center justify-center">
+                    <Clock className="h-5 w-5 text-warning" />
+                  </div>
                   {language === 'hi' ? 'खुलने का समय' : 'Opening Hours'}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                    <span>{language === 'hi' ? 'सोमवार - शनिवार' : 'Monday - Saturday'}</span>
-                    <span className="font-bold text-primary">6:00 AM - 10:00 PM</span>
+                  <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
+                    <span className="font-medium">{language === 'hi' ? 'सोमवार - शनिवार' : 'Monday - Saturday'}</span>
+                    <span className="font-bold text-primary text-lg">6:00 AM - 10:00 PM</span>
                   </div>
-                  <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                    <span>{language === 'hi' ? 'रविवार' : 'Sunday'}</span>
-                    <span className="font-bold text-primary">8:00 AM - 8:00 PM</span>
+                  <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
+                    <span className="font-medium">{language === 'hi' ? 'रविवार' : 'Sunday'}</span>
+                    <span className="font-bold text-primary text-lg">8:00 AM - 8:00 PM</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="shadow-xl animate-fade-in" style={{ animationDelay: '0.1s' }}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-primary" />
+                  <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                    <MapPin className="h-5 w-5 text-primary" />
+                  </div>
                   {language === 'hi' ? 'हमारा पता' : 'Our Location'}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  <p className="text-lg font-semibold">Scope Express Library</p>
+                <div className="space-y-4">
+                  <p className="text-xl font-bold">Scope Express Library</p>
                   <p className="text-muted-foreground">{t('contact.address.value')}</p>
                   <p className="text-muted-foreground">Pin Code: 485776</p>
-                  <a href="tel:+916265368438" className="flex items-center gap-2 text-primary font-medium">
-                    <Phone className="h-4 w-4" />
+                  <a href="tel:+916265368438" className="inline-flex items-center gap-2 text-primary font-bold text-lg hover:underline">
+                    <Phone className="h-5 w-5" />
                     +91 62653 68438
                   </a>
                 </div>
@@ -280,16 +335,16 @@ const Library = () => {
       </section>
 
       {/* Enquiry Form */}
-      <section className="py-12 md:py-16">
+      <section className="py-12 md:py-16 bg-gradient-to-r from-primary/10 via-accent/5 to-secondary/10">
         <div className="container mx-auto px-4">
           <Card className="max-w-lg mx-auto shadow-2xl animate-scale-in">
             <CardHeader className="text-center">
-              <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="h-8 w-8 text-white" />
+              <div className="w-20 h-20 bg-gradient-to-r from-primary to-accent rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <BookOpen className="h-10 w-10 text-white" />
               </div>
               <CardTitle className="text-2xl">{t('library.form.title')}</CardTitle>
               <p className="text-muted-foreground mt-2">
-                {language === 'hi' ? 'आज ही अपनी seat book करें!' : 'Book your seat today!'}
+                {language === 'hi' ? '🎯 आज ही अपनी seat book करें!' : '🎯 Book your seat today!'}
               </p>
             </CardHeader>
             <CardContent>
@@ -301,7 +356,7 @@ const Library = () => {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder={language === 'hi' ? 'अपना नाम लिखें' : 'Enter your name'}
-                    className="h-12"
+                    className="h-12 rounded-xl"
                     required
                   />
                 </div>
@@ -314,7 +369,7 @@ const Library = () => {
                     value={formData.mobile}
                     onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
                     placeholder={language === 'hi' ? 'मोबाइल नंबर' : 'Mobile number'}
-                    className="h-12"
+                    className="h-12 rounded-xl"
                     required
                   />
                 </div>
@@ -325,7 +380,7 @@ const Library = () => {
                     value={formData.classLevel}
                     onValueChange={(value) => setFormData({ ...formData, classLevel: value })}
                   >
-                    <SelectTrigger className="h-12">
+                    <SelectTrigger className="h-12 rounded-xl">
                       <SelectValue placeholder={language === 'hi' ? 'कक्षा / कोर्स चुनें' : 'Select class / course'} />
                     </SelectTrigger>
                     <SelectContent>
@@ -342,7 +397,7 @@ const Library = () => {
                     value={formData.timing}
                     onValueChange={(value) => setFormData({ ...formData, timing: value })}
                   >
-                    <SelectTrigger className="h-12">
+                    <SelectTrigger className="h-12 rounded-xl">
                       <SelectValue placeholder={language === 'hi' ? 'समय चुनें' : 'Select timing'} />
                     </SelectTrigger>
                     <SelectContent>
@@ -355,7 +410,7 @@ const Library = () => {
 
                 <Button
                   type="submit"
-                  className="w-full h-14 bg-gradient-primary text-lg font-semibold"
+                  className="w-full h-14 bg-gradient-to-r from-primary to-accent text-lg font-bold rounded-xl shadow-lg"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? t('common.loading') : (
@@ -367,7 +422,7 @@ const Library = () => {
                 </Button>
 
                 <p className="text-center text-sm text-muted-foreground">
-                  {language === 'hi' ? 'हम जल्द ही आपसे संपर्क करेंगे' : 'We will contact you shortly'}
+                  {language === 'hi' ? '✅ हम जल्द ही आपसे संपर्क करेंगे' : '✅ We will contact you shortly'}
                 </p>
               </form>
             </CardContent>
