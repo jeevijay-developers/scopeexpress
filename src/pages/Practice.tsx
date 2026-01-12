@@ -129,6 +129,7 @@ const Practice = () => {
         <QuizGame
           topic={selectedTopic}
           classLevel={studentInfo.classLevel}
+          studentName={studentInfo.name}
           leadId={leadId}
           onEnd={handleQuizEnd}
         />
