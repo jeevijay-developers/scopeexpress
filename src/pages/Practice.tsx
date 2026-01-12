@@ -93,9 +93,18 @@ const Practice = () => {
         school: formData.school,
       });
       toast.success(t('common.success'));
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      toast.error(t('common.error'));
+    } catch (err: unknown) {
+      const message =
+        typeof err === 'object' && err !== null && 'message' in err
+          ? String((err as any).message)
+          : String(err);
+
+      console.error('Error submitting form:', err);
+      toast.error(
+        language === 'hi'
+          ? `सबमिट नहीं हुआ: ${message}`
+          : `Submit failed: ${message}`
+      );
     } finally {
       setIsSubmitting(false);
     }
