@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { 
   Brain, BookOpen, Calculator, FlaskConical, Globe, ArrowRight, Gamepad2, 
   Star, Trophy, Zap, Target, Sparkles, Music, Award, CheckCircle,
-  Users, Clock, Gift
+  Users, Clock, Gift, Play, Heart, Flame, Timer, Crown, User, School,
+  Phone, ChevronRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,7 +16,6 @@ import { QuizGame } from '@/components/quiz/QuizGame';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import quizFun from '@/assets/quiz-fun.jpg';
-import studentSuccess from '@/assets/student-success.jpg';
 
 interface StudentInfo {
   name: string;
@@ -25,11 +25,11 @@ interface StudentInfo {
 }
 
 const topics = [
-  { id: 'reasoning', icon: Brain, color: 'bg-primary', questions: 50 },
-  { id: 'history', icon: BookOpen, color: 'bg-secondary', questions: 45 },
-  { id: 'maths', icon: Calculator, color: 'bg-accent', questions: 60 },
-  { id: 'science', icon: FlaskConical, color: 'bg-success', questions: 55 },
-  { id: 'gk', icon: Globe, color: 'bg-warning', questions: 70 },
+  { id: 'reasoning', icon: Brain, color: 'from-violet-500 to-purple-600', questions: 50, emoji: '🧠' },
+  { id: 'history', icon: BookOpen, color: 'from-amber-500 to-orange-600', questions: 45, emoji: '📜' },
+  { id: 'maths', icon: Calculator, color: 'from-blue-500 to-cyan-600', questions: 60, emoji: '🔢' },
+  { id: 'science', icon: FlaskConical, color: 'from-green-500 to-emerald-600', questions: 55, emoji: '🔬' },
+  { id: 'gk', icon: Globe, color: 'from-pink-500 to-rose-600', questions: 70, emoji: '🌍' },
 ];
 
 const classes = ['6', '7', '8', '9', '10', '11', '12'];
@@ -47,20 +47,6 @@ const Practice = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const features = [
-    { icon: Gift, text: language === 'hi' ? '100% मुफ्त' : '100% Free', color: 'text-success' },
-    { icon: Zap, text: language === 'hi' ? 'तुरंत शुरू' : 'Instant Start', color: 'text-warning' },
-    { icon: Trophy, text: language === 'hi' ? '4 लेवल्स' : '4 Levels', color: 'text-primary' },
-    { icon: Music, text: language === 'hi' ? 'साउंड इफेक्ट्स' : 'Sound Effects', color: 'text-accent' },
-  ];
-
-  const levels = [
-    { name: language === 'hi' ? 'बिगिनर' : 'Beginner', points: '0-24', icon: Star, color: 'bg-muted' },
-    { name: language === 'hi' ? 'लर्नर' : 'Learner', points: '25-49', icon: Target, color: 'bg-primary' },
-    { name: language === 'hi' ? 'परफॉर्मर' : 'Performer', points: '50-79', icon: Zap, color: 'bg-secondary' },
-    { name: language === 'hi' ? 'चैंपियन' : 'Champion', points: '80+', icon: Trophy, color: 'bg-warning' },
-  ];
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.mobile || !formData.classLevel || !formData.school) {
@@ -70,9 +56,6 @@ const Practice = () => {
 
     setIsSubmitting(true);
     try {
-      // IMPORTANT:
-      // We do NOT call .select() here because SELECT on leads is admin-only (RLS).
-      // Instead we generate the id client-side and store it.
       const newLeadId = crypto.randomUUID();
 
       const { error } = await supabase
@@ -137,307 +120,419 @@ const Practice = () => {
     );
   }
 
+  // Show Quiz Dashboard after student info is submitted
+  if (studentInfo && leadId) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900">
+        {/* Animated Background */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-60 h-60 bg-pink-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-bounce-slow"></div>
+          
+          {/* Grid Pattern */}
+          <div className="absolute inset-0 opacity-5" style={{
+            backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+            backgroundSize: '60px 60px'
+          }}></div>
+        </div>
+
+        <div className="relative container mx-auto px-4 py-8">
+          {/* Player Welcome Header */}
+          <div className="text-center mb-8 animate-fade-in">
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 px-6 py-3 rounded-full mb-6">
+              <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center">
+                <User className="h-6 w-6 text-white" />
+              </div>
+              <div className="text-left">
+                <p className="text-purple-300 text-sm">{language === 'hi' ? 'वेलकम, प्लेयर!' : 'Welcome, Player!'}</p>
+                <p className="text-white text-2xl font-bold">{studentInfo.name}</p>
+              </div>
+              <div className="ml-4 pl-4 border-l border-purple-500/30 text-left">
+                <p className="text-purple-300 text-sm">{language === 'hi' ? 'कक्षा' : 'Class'}</p>
+                <p className="text-white text-lg font-bold">{studentInfo.classLevel}</p>
+              </div>
+            </div>
+
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
+                {language === 'hi' ? '🎮 टॉपिक चुनें' : '🎮 Choose Your Topic'}
+              </span>
+            </h1>
+            <p className="text-purple-200 text-lg">
+              {language === 'hi' 
+                ? 'किसी भी टॉपिक पर क्लिक करें और क्विज़ शुरू करें!'
+                : 'Click on any topic and start the quiz!'}
+            </p>
+          </div>
+
+          {/* Stats Bar */}
+          <div className="flex flex-wrap justify-center gap-4 mb-10 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            {[
+              { icon: Heart, label: language === 'hi' ? '3 लाइव्स' : '3 Lives', color: 'text-red-400', bg: 'bg-red-500/20' },
+              { icon: Timer, label: language === 'hi' ? '30 सेकंड/प्रश्न' : '30 Sec/Question', color: 'text-cyan-400', bg: 'bg-cyan-500/20' },
+              { icon: Flame, label: language === 'hi' ? 'स्ट्रीक बोनस' : 'Streak Bonus', color: 'text-orange-400', bg: 'bg-orange-500/20' },
+              { icon: Crown, label: language === 'hi' ? 'चैंपियन बनो!' : 'Become Champion!', color: 'text-yellow-400', bg: 'bg-yellow-500/20' },
+            ].map((stat, i) => (
+              <div key={i} className={`flex items-center gap-2 ${stat.bg} px-4 py-2 rounded-full border border-white/10`}>
+                <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                <span className="text-white text-sm font-medium">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Topic Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
+            {topics.map((topic, i) => (
+              <button
+                key={topic.id}
+                onClick={() => handleTopicSelect(topic.id)}
+                className="group animate-fade-in"
+                style={{ animationDelay: `${0.2 + i * 0.1}s` }}
+              >
+                <Card className="h-full bg-slate-800/50 border-2 border-transparent hover:border-purple-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20 overflow-hidden group-hover:scale-105">
+                  <CardContent className="p-0">
+                    {/* Header with Gradient */}
+                    <div className={`bg-gradient-to-r ${topic.color} p-6 relative overflow-hidden`}>
+                      <div className="absolute inset-0 bg-black/10"></div>
+                      <div className="absolute -right-6 -top-6 text-8xl opacity-20 group-hover:scale-125 transition-transform duration-500">
+                        {topic.emoji}
+                      </div>
+                      <div className="relative">
+                        <topic.icon className="h-12 w-12 text-white mb-3 group-hover:scale-110 transition-transform" />
+                        <h3 className="text-2xl font-bold text-white">
+                          {t(`practice.topics.${topic.id}`)}
+                        </h3>
+                      </div>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-purple-300 text-sm">
+                          {language === 'hi' ? 'प्रश्नों की संख्या' : 'Questions'}
+                        </span>
+                        <span className="text-white font-bold">{topic.questions}+</span>
+                      </div>
+                      
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-purple-300 text-sm">
+                          {language === 'hi' ? 'डिफिकल्टी' : 'Difficulty'}
+                        </span>
+                        <div className="flex gap-1">
+                          {[1, 2, 3].map((star) => (
+                            <Star key={star} className={`h-4 w-4 ${star <= 2 ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'}`} />
+                          ))}
+                        </div>
+                      </div>
+
+                      <Button className={`w-full bg-gradient-to-r ${topic.color} hover:opacity-90 text-lg py-6 group`}>
+                        <Play className="mr-2 h-5 w-5 group-hover:scale-125 transition-transform" />
+                        {language === 'hi' ? 'खेलें' : 'PLAY'}
+                        <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </button>
+            ))}
+          </div>
+
+          {/* Levels Preview */}
+          <div className="max-w-4xl mx-auto animate-fade-in" style={{ animationDelay: '0.6s' }}>
+            <h2 className="text-xl font-bold text-white text-center mb-6">
+              {language === 'hi' ? '🏆 4 लेवल्स - बिगिनर से चैंपियन तक!' : '🏆 4 Levels - From Beginner to Champion!'}
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { name: language === 'hi' ? 'बिगिनर' : 'Beginner', points: '0-24', color: 'from-gray-500 to-slate-600', icon: Star },
+                { name: language === 'hi' ? 'लर्नर' : 'Learner', points: '25-49', color: 'from-blue-500 to-cyan-600', icon: Target },
+                { name: language === 'hi' ? 'परफॉर्मर' : 'Performer', points: '50-79', color: 'from-purple-500 to-pink-600', icon: Zap },
+                { name: language === 'hi' ? 'चैंपियन' : 'Champion', points: '80+', color: 'from-yellow-500 to-orange-600', icon: Trophy },
+              ].map((level, i) => (
+                <div key={i} className="text-center">
+                  <div className={`w-16 h-16 bg-gradient-to-br ${level.color} rounded-2xl flex items-center justify-center mx-auto mb-2 shadow-lg`}>
+                    <level.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <p className="text-white font-bold">{level.name}</p>
+                  <p className="text-purple-300 text-xs">{level.points} pts</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Back Button */}
+          <div className="text-center mt-10">
+            <Button
+              variant="ghost"
+              className="text-purple-300 hover:text-white"
+              onClick={() => {
+                setStudentInfo(null);
+                setLeadId(null);
+              }}
+            >
+              {language === 'hi' ? '← दूसरे अकाउंट से खेलें' : '← Play with different account'}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show Registration Form
   return (
     <Layout>
-      {/* Hero Banner */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10 py-12 md:py-16">
-        {/* Animated Elements */}
-        <div className="absolute top-10 left-10 w-20 h-20 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
-        <div className="absolute bottom-10 right-10 w-32 h-32 bg-accent/20 rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 right-1/4 w-16 h-16 bg-warning/30 rounded-full blur-xl animate-bounce-slow"></div>
-        
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 py-16 md:py-24">
+        {/* Animated Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-60 h-60 bg-pink-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-bounce-slow"></div>
+          
+          {/* Grid Pattern */}
+          <div className="absolute inset-0 opacity-5" style={{
+            backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+            backgroundSize: '60px 60px'
+          }}></div>
+        </div>
+
         <div className="container mx-auto px-4 relative">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side - Info */}
             <div className="text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 bg-success/10 text-success px-4 py-2 rounded-full mb-6 animate-fade-in">
-                <Gift className="h-4 w-4" />
-                <span className="text-sm font-bold">
+              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 px-4 py-2 rounded-full mb-6 animate-fade-in">
+                <Gift className="h-4 w-4 text-green-400" />
+                <span className="text-green-300 text-sm font-bold">
                   {language === 'hi' ? '🎮 100% FREE - कोई लॉगिन नहीं!' : '🎮 100% FREE - No Login Required!'}
                 </span>
               </div>
               
-              <h1 className="text-3xl md:text-5xl font-bold mb-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-                <span className="text-gradient">{t('practice.title')}</span>
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
+                  {language === 'hi' ? 'खेलो. सीखो. जीतो!' : 'PLAY. LEARN. WIN!'}
+                </span>
               </h1>
               
-              <p className="text-2xl font-medium text-foreground mb-4 animate-fade-in" style={{ animationDelay: '0.15s' }}>
-                {t('practice.subtitle')} 🚀
-              </p>
-              
-              <p className="text-muted-foreground mb-6 text-lg animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <p className="text-purple-200 text-lg mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
                 {language === 'hi' 
-                  ? 'अपनी class के हिसाब से 5 topics में practice करें। Points कमाएं, levels unlock करें, sounds सुनें और Champion बनें!'
-                  : 'Practice in 5 topics based on your class. Earn points, unlock levels, hear sounds and become a Champion!'}
+                  ? 'अपनी class के हिसाब से 5 topics में practice करें। Points कमाएं, levels unlock करें और Champion बनें!'
+                  : 'Practice in 5 topics based on your class. Earn points, unlock levels and become a Champion!'}
               </p>
 
-              {/* Feature Pills */}
-              <div className="flex flex-wrap gap-3 justify-center lg:justify-start mb-8 animate-fade-in" style={{ animationDelay: '0.25s' }}>
-                {features.map((feature, i) => (
-                  <div key={i} className="flex items-center gap-2 bg-card px-4 py-2 rounded-full shadow-sm">
-                    <feature.icon className={`h-4 w-4 ${feature.color}`} />
-                    <span className="text-sm font-medium">{feature.text}</span>
+              {/* Feature Grid */}
+              <div className="grid grid-cols-2 gap-4 mb-8 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                {[
+                  { icon: Heart, text: language === 'hi' ? '3 लाइव्स' : '3 Lives', color: 'text-red-400' },
+                  { icon: Timer, text: language === 'hi' ? '30 सेकंड टाइमर' : '30 Sec Timer', color: 'text-cyan-400' },
+                  { icon: Flame, text: language === 'hi' ? 'स्ट्रीक बोनस' : 'Streak Bonus', color: 'text-orange-400' },
+                  { icon: Trophy, text: language === 'hi' ? '4 लेवल्स' : '4 Levels', color: 'text-yellow-400' },
+                ].map((feature, i) => (
+                  <div key={i} className="flex items-center gap-3 bg-white/5 border border-white/10 p-3 rounded-xl">
+                    <feature.icon className={`h-6 w-6 ${feature.color}`} />
+                    <span className="text-white font-medium">{feature.text}</span>
                   </div>
                 ))}
               </div>
 
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-4 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-                <div className="text-center p-4 bg-card rounded-xl shadow-sm">
-                  <p className="text-3xl font-bold text-primary">280+</p>
-                  <p className="text-xs text-muted-foreground">{language === 'hi' ? 'प्रश्न' : 'Questions'}</p>
+              {/* Stats Row */}
+              <div className="flex justify-center lg:justify-start gap-6 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+                <div className="text-center">
+                  <p className="text-4xl font-bold text-cyan-400">280+</p>
+                  <p className="text-purple-300 text-sm">{language === 'hi' ? 'प्रश्न' : 'Questions'}</p>
                 </div>
-                <div className="text-center p-4 bg-card rounded-xl shadow-sm">
-                  <p className="text-3xl font-bold text-accent">5</p>
-                  <p className="text-xs text-muted-foreground">{language === 'hi' ? 'विषय' : 'Topics'}</p>
+                <div className="text-center">
+                  <p className="text-4xl font-bold text-pink-400">5</p>
+                  <p className="text-purple-300 text-sm">{language === 'hi' ? 'विषय' : 'Topics'}</p>
                 </div>
-                <div className="text-center p-4 bg-card rounded-xl shadow-sm">
-                  <p className="text-3xl font-bold text-success">7</p>
-                  <p className="text-xs text-muted-foreground">{language === 'hi' ? 'कक्षाएं' : 'Classes'}</p>
+                <div className="text-center">
+                  <p className="text-4xl font-bold text-green-400">7</p>
+                  <p className="text-purple-300 text-sm">{language === 'hi' ? 'कक्षाएं' : 'Classes'}</p>
                 </div>
               </div>
             </div>
 
-            <div className="relative animate-fade-in" style={{ animationDelay: '0.3s' }}>
-              <img 
-                src={quizFun} 
-                alt="Students playing quiz" 
-                className="rounded-3xl shadow-2xl"
-              />
-              <div className="absolute -top-4 -right-4 bg-warning text-warning-foreground px-4 py-2 rounded-2xl shadow-lg animate-bounce-slow">
-                <p className="font-bold">🏆 Champion!</p>
-              </div>
-              <div className="absolute -bottom-4 -left-4 bg-success text-success-foreground px-4 py-2 rounded-2xl shadow-lg animate-float">
-                <p className="font-bold">+10 Points!</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-12 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-8">
-            {language === 'hi' ? '🎯 कैसे काम करता है?' : '🎯 How It Works?'}
-          </h2>
-          
-          <div className="grid md:grid-cols-4 gap-6">
-            {[
-              { step: '1', title: language === 'hi' ? 'जानकारी दें' : 'Enter Info', desc: language === 'hi' ? 'अपना नाम, मोबाइल, class दर्ज करें' : 'Enter your name, mobile, class', icon: Users },
-              { step: '2', title: language === 'hi' ? 'Topic चुनें' : 'Choose Topic', desc: language === 'hi' ? '5 topics में से कोई एक चुनें' : 'Choose any one from 5 topics', icon: BookOpen },
-              { step: '3', title: language === 'hi' ? 'Quiz खेलें' : 'Play Quiz', desc: language === 'hi' ? 'सवालों के जवाब दें, points कमाएं' : 'Answer questions, earn points', icon: Gamepad2 },
-              { step: '4', title: language === 'hi' ? 'Level Up करें' : 'Level Up', desc: language === 'hi' ? 'Champion बनें और celebrate करें!' : 'Become Champion and celebrate!', icon: Trophy },
-            ].map((item, i) => (
-              <Card key={i} className="text-center card-hover relative overflow-hidden">
-                <div className="absolute top-2 left-2 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
-                  {item.step}
-                </div>
-                <CardContent className="p-6 pt-10">
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <item.icon className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="font-semibold mb-2">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.desc}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Levels Explanation */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-8">
-            {language === 'hi' ? '🔥 4 Levels - Beginner से Champion तक!' : '🔥 4 Levels - From Beginner to Champion!'}
-          </h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-            {levels.map((level, i) => (
-              <Card key={i} className={`text-center card-hover ${i === 3 ? 'ring-2 ring-warning' : ''}`}>
-                <CardContent className="p-6">
-                  <div className={`w-14 h-14 ${level.color} rounded-2xl flex items-center justify-center mx-auto mb-3`}>
-                    <level.icon className={`h-7 w-7 ${i === 3 ? 'text-warning-foreground' : 'text-white'}`} />
-                  </div>
-                  <p className="font-bold">{level.name}</p>
-                  <p className="text-xs text-muted-foreground">{level.points} points</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="py-12 bg-gradient-to-b from-background to-muted/30">
-        <div className="container mx-auto px-4">
-          {!studentInfo ? (
-            /* Student Info Form */
-            <div className="max-w-lg mx-auto">
-              <Card className="animate-scale-in shadow-2xl">
+            {/* Right Side - Form */}
+            <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              <Card className="bg-slate-800/80 border-2 border-purple-500/30 shadow-2xl shadow-purple-500/20 backdrop-blur-xl">
                 <CardHeader className="text-center pb-2">
-                  <div className="w-16 h-16 bg-gradient-hero rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Gamepad2 className="h-8 w-8 text-white" />
+                  <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/30">
+                    <Gamepad2 className="h-10 w-10 text-white" />
                   </div>
-                  <CardTitle className="text-2xl">{t('practice.form.title')}</CardTitle>
-                  <p className="text-muted-foreground mt-2">
-                    {language === 'hi' ? 'बस 4 details और शुरू करें practice!' : 'Just 4 details and start practicing!'}
+                  <CardTitle className="text-2xl text-white">
+                    {language === 'hi' ? '🚀 शुरू करें!' : '🚀 Get Started!'}
+                  </CardTitle>
+                  <p className="text-purple-300 mt-2">
+                    {language === 'hi' ? 'बस 4 details और quiz शुरू!' : 'Just 4 details and start the quiz!'}
                   </p>
                 </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                <CardContent className="pt-4">
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    {/* Name Field */}
                     <div className="space-y-2">
-                      <Label htmlFor="name">{t('practice.form.name')} *</Label>
+                      <Label htmlFor="name" className="text-purple-200 flex items-center gap-2">
+                        <User className="h-4 w-4" />
+                        {language === 'hi' ? 'आपका नाम' : 'Your Name'} *
+                      </Label>
                       <Input
                         id="name"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder={language === 'hi' ? 'अपना नाम लिखें' : 'Enter your name'}
-                        className="h-12"
+                        className="h-14 bg-slate-700/50 border-purple-500/30 text-white placeholder:text-purple-300/50 focus:border-purple-400"
                         required
                       />
                     </div>
 
+                    {/* Mobile Field */}
                     <div className="space-y-2">
-                      <Label htmlFor="mobile">{t('practice.form.mobile')} *</Label>
+                      <Label htmlFor="mobile" className="text-purple-200 flex items-center gap-2">
+                        <Phone className="h-4 w-4" />
+                        {language === 'hi' ? 'मोबाइल नंबर' : 'Mobile Number'} *
+                      </Label>
                       <Input
                         id="mobile"
                         type="tel"
                         value={formData.mobile}
                         onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-                        placeholder={language === 'hi' ? 'मोबाइल नंबर' : 'Mobile number'}
-                        className="h-12"
+                        placeholder="10 digit mobile number"
+                        className="h-14 bg-slate-700/50 border-purple-500/30 text-white placeholder:text-purple-300/50 focus:border-purple-400"
                         required
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="class">{t('practice.form.class')} *</Label>
-                      <Select
-                        value={formData.classLevel}
-                        onValueChange={(value) => setFormData({ ...formData, classLevel: value })}
-                      >
-                        <SelectTrigger className="h-12">
-                          <SelectValue placeholder={language === 'hi' ? 'कक्षा चुनें' : 'Select class'} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {classes.map((c) => (
-                            <SelectItem key={c} value={c}>
-                              {language === 'hi' ? `कक्षा ${c}` : `Class ${c}`}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                    {/* Class & School Row */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-purple-200 flex items-center gap-2">
+                          <Award className="h-4 w-4" />
+                          {language === 'hi' ? 'कक्षा' : 'Class'} *
+                        </Label>
+                        <Select
+                          value={formData.classLevel}
+                          onValueChange={(value) => setFormData({ ...formData, classLevel: value })}
+                        >
+                          <SelectTrigger className="h-14 bg-slate-700/50 border-purple-500/30 text-white">
+                            <SelectValue placeholder={language === 'hi' ? 'चुनें' : 'Select'} />
+                          </SelectTrigger>
+                          <SelectContent className="bg-slate-800 border-purple-500/30">
+                            {classes.map((c) => (
+                              <SelectItem key={c} value={c} className="text-white hover:bg-purple-500/20">
+                                {language === 'hi' ? `कक्षा ${c}` : `Class ${c}`}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="school" className="text-purple-200 flex items-center gap-2">
+                          <School className="h-4 w-4" />
+                          {language === 'hi' ? 'स्कूल' : 'School'} *
+                        </Label>
+                        <Input
+                          id="school"
+                          value={formData.school}
+                          onChange={(e) => setFormData({ ...formData, school: e.target.value })}
+                          placeholder={language === 'hi' ? 'स्कूल का नाम' : 'School name'}
+                          className="h-14 bg-slate-700/50 border-purple-500/30 text-white placeholder:text-purple-300/50 focus:border-purple-400"
+                          required
+                        />
+                      </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="school">{t('practice.form.school')} *</Label>
-                      <Input
-                        id="school"
-                        value={formData.school}
-                        onChange={(e) => setFormData({ ...formData, school: e.target.value })}
-                        placeholder={language === 'hi' ? 'स्कूल का नाम' : 'School name'}
-                        className="h-12"
-                        required
-                      />
-                    </div>
-
+                    {/* Submit Button */}
                     <Button
                       type="submit"
-                      className="w-full h-14 bg-gradient-primary text-lg font-semibold"
+                      className="w-full h-16 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 hover:from-purple-500 hover:via-pink-500 hover:to-purple-500 text-xl font-bold shadow-lg shadow-purple-500/30"
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? t('common.loading') : (
+                      {isSubmitting ? (
                         <>
-                          {t('practice.form.submit')} 🚀
-                          <ArrowRight className="ml-2 h-5 w-5" />
+                          <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                          {language === 'hi' ? 'लोड हो रहा है...' : 'Loading...'}
+                        </>
+                      ) : (
+                        <>
+                          <Play className="mr-2 h-6 w-6" />
+                          {language === 'hi' ? 'गेम शुरू करें!' : 'START GAME!'}
+                          <ArrowRight className="ml-2 h-6 w-6" />
                         </>
                       )}
                     </Button>
 
-                    <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                      <CheckCircle className="h-4 w-4 text-success" />
-                      {t('practice.form.note')}
+                    {/* Trust Badge */}
+                    <div className="flex items-center justify-center gap-4 pt-2">
+                      <div className="flex items-center gap-1 text-green-400 text-sm">
+                        <CheckCircle className="h-4 w-4" />
+                        <span>{language === 'hi' ? '100% मुफ्त' : '100% Free'}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-green-400 text-sm">
+                        <CheckCircle className="h-4 w-4" />
+                        <span>{language === 'hi' ? 'तुरंत शुरू' : 'Instant Start'}</span>
+                      </div>
                     </div>
                   </form>
                 </CardContent>
               </Card>
             </div>
-          ) : (
-            /* Topic Selection */
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-8 animate-fade-in">
-                <div className="inline-flex items-center gap-2 bg-success/10 text-success px-4 py-2 rounded-full mb-4">
-                  <Sparkles className="h-4 w-4" />
-                  <span className="font-medium">
-                    {language === 'hi' ? 'स्वागत है' : 'Welcome'}, {studentInfo.name}! 🎉
-                  </span>
-                </div>
-                <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                  {language === 'hi' ? '🎯 अपना Topic चुनें' : '🎯 Choose Your Topic'}
-                </h2>
-                <p className="text-muted-foreground">
-                  {language === 'hi' 
-                    ? `Class ${studentInfo.classLevel} के लिए questions तैयार हैं!`
-                    : `Questions ready for Class ${studentInfo.classLevel}!`}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {topics.map((topic, i) => (
-                  <Card
-                    key={topic.id}
-                    className="cursor-pointer card-hover border-2 border-transparent hover:border-primary/30 animate-fade-in overflow-hidden"
-                    style={{ animationDelay: `${i * 0.1}s` }}
-                    onClick={() => handleTopicSelect(topic.id)}
-                  >
-                    <CardContent className="p-8 text-center relative">
-                      <div className="absolute top-2 right-2 bg-muted text-muted-foreground text-xs px-2 py-1 rounded-full">
-                        {topic.questions}+ Qs
-                      </div>
-                      <div className={`w-20 h-20 ${topic.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
-                        <topic.icon className="h-10 w-10 text-white" />
-                      </div>
-                      <h3 className="text-xl font-semibold mb-2">{t(`topic.${topic.id}`)}</h3>
-                      <Button className="mt-2 w-full" variant="outline">
-                        {language === 'hi' ? 'खेलें' : 'Play'} →
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </section>
 
-      {/* Success Banner */}
-      <section className="py-12 bg-gradient-hero text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
-          <img src={studentSuccess} alt="" className="w-full h-full object-cover" />
-        </div>
-        <div className="container mx-auto px-4 relative text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            {language === 'hi' ? '🏆 Champion बनने का मौका!' : '🏆 Chance to Become Champion!'}
+      {/* Topics Preview */}
+      <section className="py-16 bg-slate-900">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center text-white mb-10">
+            {language === 'hi' ? '🎯 5 टॉपिक्स में Practice करें' : '🎯 Practice in 5 Topics'}
           </h2>
-          <p className="text-white/80 mb-6 max-w-2xl mx-auto">
-            {language === 'hi' 
-              ? 'हर सही जवाब पर +10 points मिलते हैं। 80+ points पर आप Champion बन जाते हैं! Sound effects के साथ practice करें और मज़े लें!'
-              : 'Get +10 points for every correct answer. Score 80+ points to become a Champion! Practice with sound effects and have fun!'}
-          </p>
+          
           <div className="flex flex-wrap justify-center gap-4">
-            <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-xl">
-              <p className="text-2xl font-bold">🎵</p>
-              <p className="text-sm">{language === 'hi' ? 'सही जवाब पर Happy Sound' : 'Happy Sound on Correct'}</p>
-            </div>
-            <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-xl">
-              <p className="text-2xl font-bold">🔔</p>
-              <p className="text-sm">{language === 'hi' ? 'गलत जवाब पर Soft Sound' : 'Soft Sound on Wrong'}</p>
-            </div>
-            <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-xl">
-              <p className="text-2xl font-bold">🎺</p>
-              <p className="text-sm">{language === 'hi' ? 'Level Up पर Fanfare' : 'Fanfare on Level Up'}</p>
-            </div>
+            {topics.map((topic, i) => (
+              <div 
+                key={topic.id}
+                className={`flex items-center gap-3 bg-gradient-to-r ${topic.color} px-6 py-4 rounded-2xl shadow-lg transform hover:scale-105 transition-transform`}
+              >
+                <span className="text-3xl">{topic.emoji}</span>
+                <div>
+                  <p className="text-white font-bold text-lg">{t(`practice.topics.${topic.id}`)}</p>
+                  <p className="text-white/70 text-sm">{topic.questions}+ questions</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-16 bg-gradient-to-b from-slate-900 to-purple-900">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center text-white mb-12">
+            {language === 'hi' ? '🎮 कैसे खेलें?' : '🎮 How to Play?'}
+          </h2>
+          
+          <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            {[
+              { step: '1', title: language === 'hi' ? 'जानकारी दें' : 'Enter Details', desc: language === 'hi' ? 'ऊपर फॉर्म भरें' : 'Fill the form above', icon: User },
+              { step: '2', title: language === 'hi' ? 'Topic चुनें' : 'Choose Topic', desc: language === 'hi' ? '5 में से कोई एक' : 'Pick any of 5', icon: BookOpen },
+              { step: '3', title: language === 'hi' ? 'Quiz खेलें' : 'Play Quiz', desc: language === 'hi' ? 'Points कमाएं' : 'Earn points', icon: Gamepad2 },
+              { step: '4', title: language === 'hi' ? 'Champion बनें' : 'Become Champion', desc: language === 'hi' ? '80+ points पर' : 'At 80+ points', icon: Trophy },
+            ].map((item, i) => (
+              <div key={i} className="text-center relative">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center font-bold text-white shadow-lg">
+                  {item.step}
+                </div>
+                <Card className="bg-slate-800/50 border-purple-500/20 pt-8">
+                  <CardContent className="p-6">
+                    <div className="w-14 h-14 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <item.icon className="h-7 w-7 text-purple-400" />
+                    </div>
+                    <h3 className="text-white font-bold mb-2">{item.title}</h3>
+                    <p className="text-purple-300 text-sm">{item.desc}</p>
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
           </div>
         </div>
       </section>
