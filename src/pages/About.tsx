@@ -65,8 +65,8 @@ const About = () => {
             
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
               {language === 'hi' 
-                ? 'एक IITian द्वारा स्थापित, हज़ारों छात्रों का भरोसा'
-                : 'Founded by an IITian, trusted by thousands of students'}
+                ? 'एक इंजीनियर द्वारा स्थापित, हज़ारों छात्रों का भरोसा'
+                : 'Founded by an Engineer, trusted by thousands of students'}
             </p>
 
             {/* Stats */}
@@ -113,7 +113,7 @@ const About = () => {
                         className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-3xl shadow-2xl border-4 border-white/20"
                       />
                       <div className="absolute -top-4 -right-4 bg-warning text-warning-foreground px-4 py-2 rounded-2xl shadow-lg animate-bounce-slow">
-                        <p className="font-bold text-sm">🎓 IIT Madras</p>
+                        <p className="font-bold text-sm">🎓 Mech Engineer</p>
                       </div>
                       <div className="absolute -bottom-4 -left-4 bg-success text-success-foreground px-4 py-2 rounded-2xl shadow-lg">
                         <p className="font-bold text-sm">⭐ 5+ Years</p>
@@ -127,14 +127,14 @@ const About = () => {
                       {language === 'hi' ? 'मेदिनी कुमार' : 'Medinee Kumar'}
                     </h3>
                     <p className="text-primary font-medium mb-6">
-                      {language === 'hi' ? 'संस्थापक | IIT मद्रास स्नातक | शिक्षक' : 'Founder | IIT Madras Graduate | Educator'}
+                      {language === 'hi' ? 'संस्थापक | मैकेनिकल इंजीनियर | शिक्षक' : 'Founder | Mechanical Engineer | Educator'}
                     </p>
 
                     <div className="space-y-4 text-muted-foreground mb-8">
                       <p className="leading-relaxed">
                         {language === 'hi' 
-                          ? 'मध्य प्रदेश के एक छोटे से गाँव से IIT मद्रास तक का सफर - मेदिनी कुमार जी ने साबित किया है कि सही मार्गदर्शन से कोई भी सपना पूरा हो सकता है।'
-                          : 'From a small village in Madhya Pradesh to IIT Madras - Medinee Kumar ji has proven that with right guidance, any dream is achievable.'}
+                          ? 'मध्य प्रदेश के एक छोटे से गाँव से इंजीनियर तक का सफर - मेदिनी कुमार जी ने साबित किया है कि सही मार्गदर्शन से कोई भी सपना पूरा हो सकता है।'
+                          : 'From a small village in Madhya Pradesh to becoming an Engineer - Medinee Kumar ji has proven that with right guidance, any dream is achievable.'}
                       </p>
                       <p className="leading-relaxed">
                         {language === 'hi' 
@@ -146,7 +146,7 @@ const About = () => {
                     {/* Achievements */}
                     <div className="grid grid-cols-2 gap-4">
                       {[
-                        { icon: GraduationCap, text: language === 'hi' ? 'IIT मद्रास स्नातक' : 'IIT Madras Graduate' },
+                        { icon: GraduationCap, text: language === 'hi' ? 'मैकेनिकल इंजीनियर' : 'Mechanical Engineer' },
                         { icon: Users, text: language === 'hi' ? '500+ छात्र मार्गदर्शित' : '500+ Students Mentored' },
                         { icon: Award, text: language === 'hi' ? 'पुरस्कृत शिक्षक' : 'Award-Winning Educator' },
                         { icon: Heart, text: language === 'hi' ? 'समुदाय सेवक' : 'Community Leader' },
@@ -172,8 +172,8 @@ const About = () => {
             <Quote className="h-12 w-12 mx-auto mb-6 opacity-50" />
             <blockquote className="text-xl md:text-2xl italic mb-6 leading-relaxed">
               {language === 'hi' 
-                ? '"मध्य प्रदेश के एक छोटे से गाँव से IIT मद्रास तक - मैंने सीखा कि सही मार्गदर्शन और संसाधनों के साथ, कोई भी छात्र अपने सपने पूरे कर सकता है। Scope Express मेरा तरीका है उस समुदाय को वापस देने का जिसने मुझे पाला।"'
-                : '"From a small village in Madhya Pradesh to IIT Madras - I learned that with the right guidance and resources, any student can achieve their dreams. Scope Express is my way of giving back to the community that raised me."'}
+                ? '"मध्य प्रदेश के एक छोटे से गाँव से इंजीनियर तक - मैंने सीखा कि सही मार्गदर्शन और संसाधनों के साथ, कोई भी छात्र अपने सपने पूरे कर सकता है। Scope Express मेरा तरीका है उस समुदाय को वापस देने का जिसने मुझे पाला।"'
+                : '"From a small village in Madhya Pradesh to becoming an Engineer - I learned that with the right guidance and resources, any student can achieve their dreams. Scope Express is my way of giving back to the community that raised me."'}
             </blockquote>
             <div className="flex items-center justify-center gap-3">
               <img src={medineeKumar} alt="Medinee Kumar" className="w-12 h-12 rounded-full object-cover border-2 border-white/50" />
