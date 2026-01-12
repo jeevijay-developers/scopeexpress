@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   LogOut, Users, Gamepad2, BarChart3, HelpCircle, 
-  BookOpen, ShoppingBag, MessageSquare, GraduationCap
+  BookOpen, ShoppingBag, GraduationCap
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -15,6 +15,7 @@ import LeadsTable from '@/components/admin/LeadsTable';
 import QuizSessionsTable from '@/components/admin/QuizSessionsTable';
 import AnalyticsDashboard from '@/components/admin/AnalyticsDashboard';
 import QuestionManager from '@/components/admin/QuestionManager';
+import LibraryManager from '@/components/admin/LibraryManager';
 
 interface Lead {
   id: string;
@@ -140,28 +141,36 @@ const AdminDashboard = () => {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-2 md:grid-cols-6 gap-2 h-auto p-2">
-            <TabsTrigger value="overview" className="flex items-center gap-2 py-2">
+          <TabsList className="flex flex-wrap gap-2 h-auto p-2 bg-muted/50">
+            <TabsTrigger value="overview" className="flex items-center gap-2 py-2 px-3">
               <Users className="h-4 w-4" />
               <span className="hidden sm:inline">All Leads</span>
             </TabsTrigger>
-            <TabsTrigger value="practice" className="flex items-center gap-2 py-2">
+            <TabsTrigger value="practice" className="flex items-center gap-2 py-2 px-3">
               <Gamepad2 className="h-4 w-4" />
               <span className="hidden sm:inline">Practice</span>
             </TabsTrigger>
-            <TabsTrigger value="library" className="flex items-center gap-2 py-2">
+            <TabsTrigger value="library" className="flex items-center gap-2 py-2 px-3">
               <BookOpen className="h-4 w-4" />
               <span className="hidden sm:inline">Library</span>
             </TabsTrigger>
-            <TabsTrigger value="quizzes" className="flex items-center gap-2 py-2">
+            <TabsTrigger value="career" className="flex items-center gap-2 py-2 px-3">
+              <GraduationCap className="h-4 w-4" />
+              <span className="hidden sm:inline">Career</span>
+            </TabsTrigger>
+            <TabsTrigger value="stationery" className="flex items-center gap-2 py-2 px-3">
+              <ShoppingBag className="h-4 w-4" />
+              <span className="hidden sm:inline">Stationery</span>
+            </TabsTrigger>
+            <TabsTrigger value="quizzes" className="flex items-center gap-2 py-2 px-3">
               <Gamepad2 className="h-4 w-4" />
               <span className="hidden sm:inline">Quiz Sessions</span>
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center gap-2 py-2">
+            <TabsTrigger value="analytics" className="flex items-center gap-2 py-2 px-3">
               <BarChart3 className="h-4 w-4" />
               <span className="hidden sm:inline">Analytics</span>
             </TabsTrigger>
-            <TabsTrigger value="questions" className="flex items-center gap-2 py-2">
+            <TabsTrigger value="questions" className="flex items-center gap-2 py-2 px-3">
               <HelpCircle className="h-4 w-4" />
               <span className="hidden sm:inline">Questions</span>
             </TabsTrigger>
@@ -185,11 +194,27 @@ const AdminDashboard = () => {
           </TabsContent>
 
           <TabsContent value="library">
+            <LibraryManager 
+              leads={leads} 
+              isLoading={isLoading}
+            />
+          </TabsContent>
+
+          <TabsContent value="career">
             <LeadsTable 
               leads={leads} 
               quizSessions={quizSessions} 
               isLoading={isLoading}
-              sourceFilter="Library"
+              sourceFilter="Career Guidance"
+            />
+          </TabsContent>
+
+          <TabsContent value="stationery">
+            <LeadsTable 
+              leads={leads} 
+              quizSessions={quizSessions} 
+              isLoading={isLoading}
+              sourceFilter="Stationery"
             />
           </TabsContent>
 
