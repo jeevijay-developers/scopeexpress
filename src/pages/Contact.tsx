@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { 
   Phone, MapPin, Clock, Mail, ArrowRight, MessageCircle, 
   Sparkles, Users, Star, CheckCircle, Send, Heart, Calendar,
-  Building2, Headphones, Zap
+  Building2, Headphones, Zap, ChevronDown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,6 +24,7 @@ const Contact = () => {
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,16 +115,28 @@ const Contact = () => {
       q: language === 'hi' ? 'क्या ऑनलाइन गाइडेंस मिलती है?' : 'Do you provide online guidance?',
       a: language === 'hi' ? 'हाँ, वीडियो कॉल पर भी गाइडेंस उपलब्ध है' : 'Yes, guidance available via video call too'
     },
+    {
+      q: language === 'hi' ? 'स्टेशनरी की होम डिलीवरी होती है?' : 'Do you provide home delivery for stationery?',
+      a: language === 'hi' ? 'हाँ, ₹500 से ऊपर के ऑर्डर पर फ्री डिलीवरी' : 'Yes, free delivery on orders above ₹500'
+    },
+    {
+      q: language === 'hi' ? 'लाइब्रेरी में सीट कैसे बुक करें?' : 'How to book a seat in library?',
+      a: language === 'hi' ? 'कॉल या WhatsApp करें, या फॉर्म भरें - हम संपर्क करेंगे' : 'Call or WhatsApp us, or fill the form - we will contact you'
+    },
   ];
 
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10 py-16 md:py-20">
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10 py-16 md:py-24">
         {/* Animated Background Elements */}
-        <div className="absolute top-10 left-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-10 right-10 w-40 h-40 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 right-1/4 w-24 h-24 bg-success/20 rounded-full blur-2xl animate-bounce-slow"></div>
+        <div className="absolute top-10 left-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-60 h-60 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-success/20 rounded-full blur-2xl animate-bounce-slow"></div>
+        
+        {/* Floating Emojis */}
+        <div className="absolute top-20 right-20 text-5xl animate-float hidden md:block">💬</div>
+        <div className="absolute bottom-20 left-20 text-4xl animate-float hidden md:block" style={{ animationDelay: '0.5s' }}>📞</div>
         
         <div className="container mx-auto px-4 relative">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -135,7 +148,7 @@ const Contact = () => {
                 </span>
               </div>
               
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <h1 className="text-4xl md:text-6xl font-black mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
                 <span className="text-gradient">{t('contact.title')}</span>
               </h1>
               
@@ -149,7 +162,7 @@ const Contact = () => {
               <div className="flex flex-wrap gap-4 justify-center lg:justify-start animate-fade-in" style={{ animationDelay: '0.3s' }}>
                 <a 
                   href="tel:+916265368438" 
-                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-full font-bold hover:opacity-90 transition-opacity shadow-lg"
+                  className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-2xl font-bold hover:opacity-90 transition-opacity shadow-lg"
                 >
                   <Phone className="h-5 w-5" />
                   {language === 'hi' ? 'अभी कॉल करें' : 'Call Now'}
@@ -158,7 +171,7 @@ const Contact = () => {
                   href="https://wa.me/916265368438" 
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-success text-success-foreground px-6 py-3 rounded-full font-bold hover:opacity-90 transition-opacity shadow-lg"
+                  className="inline-flex items-center gap-2 bg-success text-success-foreground px-8 py-4 rounded-2xl font-bold hover:opacity-90 transition-opacity shadow-lg"
                 >
                   <MessageCircle className="h-5 w-5" />
                   WhatsApp
@@ -177,7 +190,7 @@ const Contact = () => {
             </div>
 
             {/* Hero Image */}
-            <div className="relative animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <div className="relative animate-fade-in hidden lg:block" style={{ animationDelay: '0.3s' }}>
               <img 
                 src={libraryInterior} 
                 alt="Scope Express Library" 
@@ -208,8 +221,8 @@ const Contact = () => {
               >
                 <Card className="card-hover h-full text-center animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
                   <CardContent className="p-6">
-                    <div className={`w-14 h-14 ${info.color} rounded-2xl flex items-center justify-center mx-auto mb-4`}>
-                      <info.icon className="h-7 w-7 text-white" />
+                    <div className={`w-16 h-16 ${info.color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                      <info.icon className="h-8 w-8 text-white" />
                     </div>
                     <p className="text-sm text-muted-foreground mb-1">{info.label}</p>
                     <p className="font-bold">{info.value}</p>
@@ -229,8 +242,8 @@ const Contact = () => {
             {/* Contact Form */}
             <Card className="shadow-2xl animate-scale-in order-2 lg:order-1">
               <CardHeader className="text-center pb-2">
-                <div className="w-16 h-16 bg-gradient-hero rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Send className="h-8 w-8 text-white" />
+                <div className="w-20 h-20 bg-gradient-to-r from-primary to-accent rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <Send className="h-10 w-10 text-white" />
                 </div>
                 <CardTitle className="text-2xl">{t('contact.form.title')}</CardTitle>
                 <p className="text-muted-foreground">
@@ -246,7 +259,7 @@ const Contact = () => {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder={language === 'hi' ? 'अपना नाम लिखें' : 'Enter your name'}
-                      className="h-12"
+                      className="h-12 rounded-xl"
                       required
                     />
                   </div>
@@ -259,7 +272,7 @@ const Contact = () => {
                       value={formData.mobile}
                       onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
                       placeholder={language === 'hi' ? 'मोबाइल नंबर' : 'Enter mobile number'}
-                      className="h-12"
+                      className="h-12 rounded-xl"
                       required
                     />
                   </div>
@@ -272,13 +285,14 @@ const Contact = () => {
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder={language === 'hi' ? 'अपना सवाल या संदेश लिखें...' : 'Type your question or message...'}
                       rows={5}
+                      className="rounded-xl"
                       required
                     />
                   </div>
 
                   <Button
                     type="submit"
-                    className="w-full h-14 bg-gradient-primary text-lg font-semibold"
+                    className="w-full h-14 bg-gradient-to-r from-primary to-accent text-lg font-bold rounded-xl shadow-lg"
                     size="lg"
                     disabled={isSubmitting}
                   >
@@ -303,12 +317,12 @@ const Contact = () => {
               {/* Meet the Founder */}
               <Card className="overflow-hidden shadow-xl animate-fade-in">
                 <CardContent className="p-0">
-                  <div className="bg-gradient-hero p-6 text-white">
+                  <div className="bg-gradient-to-r from-primary to-accent p-6 text-white">
                     <div className="flex items-center gap-4">
                       <img 
                         src={medineeKumar} 
                         alt="Medinee Kumar" 
-                        className="w-20 h-20 rounded-2xl object-cover border-2 border-white/30"
+                        className="w-20 h-20 rounded-2xl object-cover border-2 border-white/30 shadow-lg"
                       />
                       <div>
                         <p className="text-sm text-white/80 mb-1">
@@ -318,7 +332,7 @@ const Contact = () => {
                           {language === 'hi' ? 'मेदिनी कुमार जी' : 'Medinee Kumar Ji'}
                         </h3>
                         <p className="text-sm text-white/80">
-                          {language === 'hi' ? 'संस्थापक | IIT मद्रास' : 'Founder | IIT Madras'}
+                          {language === 'hi' ? 'संस्थापक | Mechanical Engineer' : 'Founder | Mechanical Engineer'}
                         </p>
                       </div>
                     </div>
@@ -333,7 +347,7 @@ const Contact = () => {
                       href="https://wa.me/916265368438?text=नमस्ते%20मेदिनी%20जी,%20मुझे%20कैरियर%20गाइडेंस%20चाहिए"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-primary font-medium hover:underline"
+                      className="inline-flex items-center gap-2 text-primary font-bold hover:underline"
                     >
                       <MessageCircle className="h-4 w-4" />
                       {language === 'hi' ? 'WhatsApp पर संपर्क करें' : 'Contact on WhatsApp'}
@@ -361,38 +375,33 @@ const Contact = () => {
                 <CardContent>
                   <div className="space-y-3">
                     {openHours.map((item, i) => (
-                      <div key={i} className="flex justify-between items-center p-3 bg-muted/50 rounded-xl">
+                      <div key={i} className="flex justify-between items-center p-4 bg-muted/50 rounded-xl">
                         <span className="font-medium">{item.day}</span>
-                        <span className="text-primary font-bold">{item.time}</span>
+                        <span className="text-primary font-bold text-lg">{item.time}</span>
                       </div>
                     ))}
                   </div>
                 </CardContent>
               </Card>
 
-              {/* FAQs */}
-              <Card className="shadow-xl animate-fade-in" style={{ animationDelay: '0.2s' }}>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center">
-                      <Headphones className="h-6 w-6 text-secondary" />
+              {/* Google Map Placeholder */}
+              <Card className="shadow-xl animate-fade-in overflow-hidden" style={{ animationDelay: '0.2s' }}>
+                <CardContent className="p-0">
+                  <div className="bg-gradient-to-br from-muted to-muted/50 h-48 flex items-center justify-center">
+                    <div className="text-center">
+                      <MapPin className="h-12 w-12 text-primary mx-auto mb-2" />
+                      <p className="font-bold">{language === 'hi' ? 'अमरपाटन, सतना' : 'Amarpatan, Satna'}</p>
+                      <p className="text-sm text-muted-foreground">MP 485776</p>
+                      <a 
+                        href="https://maps.google.com/?q=Amarpatan+Satna+MP"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-primary text-sm font-medium mt-2 hover:underline"
+                      >
+                        {language === 'hi' ? 'मैप में देखें' : 'View on Map'}
+                        <ArrowRight className="h-3 w-3" />
+                      </a>
                     </div>
-                    <div>
-                      <CardTitle>{language === 'hi' ? 'अक्सर पूछे जाने वाले सवाल' : 'Frequently Asked'}</CardTitle>
-                      <p className="text-sm text-muted-foreground">
-                        {language === 'hi' ? 'जल्दी जवाब पाएं' : 'Get quick answers'}
-                      </p>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {faqs.map((faq, i) => (
-                      <div key={i} className="border-b border-border pb-3 last:border-0 last:pb-0">
-                        <p className="font-medium mb-1">{faq.q}</p>
-                        <p className="text-sm text-muted-foreground">{faq.a}</p>
-                      </div>
-                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -401,66 +410,58 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Map Section */}
-      <section className="py-12 bg-muted/30">
+      {/* FAQ Section */}
+      <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold mb-2">
-              {language === 'hi' ? '📍 हमें यहाँ खोजें' : '📍 Find Us Here'}
-            </h2>
-            <p className="text-muted-foreground">
-              {language === 'hi' ? 'Scope Express Library, अमरपाटन, सतना, MP 485776' : 'Scope Express Library, Amarpatan, Satna, MP 485776'}
-            </p>
-          </div>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+            {language === 'hi' ? '❓ अक्सर पूछे जाने वाले सवाल' : '❓ Frequently Asked Questions'}
+          </h2>
+          <p className="text-center text-muted-foreground mb-10">
+            {language === 'hi' ? 'आपके सवालों के जवाब' : 'Answers to your questions'}
+          </p>
           
-          <Card className="max-w-4xl mx-auto overflow-hidden shadow-xl">
-            <CardContent className="p-0">
-              <div className="aspect-video bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center relative">
-                <div className="text-center p-8">
-                  <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce-slow">
-                    <MapPin className="h-10 w-10 text-primary" />
+          <div className="max-w-3xl mx-auto space-y-4">
+            {faqs.map((faq, index) => (
+              <Card 
+                key={index} 
+                className={`cursor-pointer transition-all duration-300 animate-fade-in ${
+                  expandedFaq === index ? 'shadow-lg border-primary' : ''
+                }`}
+                style={{ animationDelay: `${index * 0.05}s` }}
+                onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-bold text-lg pr-4">{faq.q}</h3>
+                    <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform flex-shrink-0 ${
+                      expandedFaq === index ? 'rotate-180' : ''
+                    }`} />
                   </div>
-                  <h3 className="text-2xl font-bold mb-2">Scope Express Library</h3>
-                  <p className="text-muted-foreground mb-4">Amarpatan, Satna, Madhya Pradesh 485776</p>
-                  <a 
-                    href="https://maps.google.com/?q=Amarpatan+Satna+MP+485776"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-full font-bold hover:opacity-90 transition-opacity"
-                  >
-                    <MapPin className="h-5 w-5" />
-                    {language === 'hi' ? 'Google Maps पर देखें' : 'View on Google Maps'}
-                  </a>
-                </div>
-                
-                {/* Decorative elements */}
-                <div className="absolute top-4 left-4 bg-success text-success-foreground px-3 py-1 rounded-full text-sm font-bold">
-                  🏢 {language === 'hi' ? 'मुख्य कार्यालय' : 'Main Office'}
-                </div>
-                <div className="absolute bottom-4 right-4 bg-warning text-warning-foreground px-3 py-1 rounded-full text-sm font-bold">
-                  🚗 {language === 'hi' ? 'फ्री पार्किंग' : 'Free Parking'}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                  {expandedFaq === index && (
+                    <p className="text-muted-foreground mt-4 pt-4 border-t">{faq.a}</p>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 bg-gradient-hero text-white">
+      <section className="py-16 bg-gradient-to-r from-primary via-accent to-secondary text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            {language === 'hi' ? '🤝 आज ही संपर्क करें!' : '🤝 Get in Touch Today!'}
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            {language === 'hi' ? '🚀 तो देर किस बात की?' : '🚀 So what are you waiting for?'}
           </h2>
-          <p className="text-lg text-white/90 mb-6 max-w-xl mx-auto">
+          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             {language === 'hi' 
-              ? 'कोई भी सवाल हो, हम यहाँ हैं आपकी मदद के लिए'
-              : 'Whatever your question, we are here to help you'}
+              ? 'अभी संपर्क करें और अपने कैरियर की शुरुआत करें!'
+              : 'Contact now and start your career journey!'}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a 
               href="tel:+916265368438" 
-              className="inline-flex items-center gap-2 bg-white text-primary px-6 py-3 rounded-full font-bold hover:bg-white/90 transition-colors"
+              className="inline-flex items-center gap-2 bg-white text-primary px-8 py-4 rounded-2xl font-bold hover:opacity-90 transition-opacity shadow-lg"
             >
               <Phone className="h-5 w-5" />
               +91 62653 68438
@@ -469,7 +470,7 @@ const Contact = () => {
               href="https://wa.me/916265368438" 
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-white/20 text-white px-6 py-3 rounded-full font-bold hover:bg-white/30 transition-colors border border-white/30"
+              className="inline-flex items-center gap-2 bg-success text-success-foreground px-8 py-4 rounded-2xl font-bold hover:opacity-90 transition-opacity shadow-lg"
             >
               <MessageCircle className="h-5 w-5" />
               WhatsApp
