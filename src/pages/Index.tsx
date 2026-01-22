@@ -3,7 +3,7 @@ import {
   BookOpen, GraduationCap, Gamepad2, ShoppingBag, ArrowRight, Star, Users, Trophy, 
   CheckCircle, Sparkles, Target, Zap, Clock, Award, TrendingUp, Heart,
   Brain, Calculator, Globe, FlaskConical, Play, Flame, Shield, Timer, Crown,
-  Rocket, Medal, PartyPopper, Gift
+  Rocket, Medal, PartyPopper, Gift, ExternalLink, Pencil, Package, Tag, Truck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -15,6 +15,8 @@ import studentSuccess from '@/assets/student-success.jpg';
 import libraryInterior from '@/assets/library-interior.jpg';
 import medineeKumar from '@/assets/medinee-kumar.png';
 import quizFun from '@/assets/quiz-fun.jpg';
+
+const STORE_URL = "https://bizgrow360.com/s/scope-express-7c1ce756-c92e-4548-bd75-b6f85f9ced4e";
 
 const Index = () => {
   const { t, language } = useLanguage();
@@ -547,6 +549,161 @@ const Index = () => {
               </Link>
             </TabsContent>
           </Tabs>
+        </div>
+      </section>
+
+      {/* 🛒 STATIONERY STORE BANNER */}
+      <section className="py-16 bg-gradient-to-r from-secondary/10 via-success/10 to-primary/10 relative overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute top-10 left-10 w-32 h-32 bg-success/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        
+        {/* Floating Stationery Icons */}
+        <div className="absolute top-16 right-20 text-4xl animate-float hidden md:block">✏️</div>
+        <div className="absolute bottom-20 left-16 text-3xl animate-bounce-slow hidden md:block">📒</div>
+        <div className="absolute top-1/3 right-1/4 text-2xl animate-float hidden md:block" style={{ animationDelay: '0.5s' }}>📐</div>
+        
+        <div className="container mx-auto px-4 relative">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 bg-success/20 text-success px-4 py-2 rounded-full mb-4 animate-bounce-slow">
+              <Tag className="h-4 w-4" />
+              <span className="font-bold text-sm">
+                {language === 'hi' ? '🎉 स्पेशल स्टूडेंट ऑफर!' : '🎉 Special Student Offer!'}
+              </span>
+            </div>
+            
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              <span className="text-gradient">
+                {language === 'hi' ? '🛒 Scope Express Store' : '🛒 Scope Express Store'}
+              </span>
+            </h2>
+            
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              {language === 'hi' 
+                ? 'सभी स्टेशनरी आइटम्स एक ही जगह - बेस्ट क्वालिटी, बेस्ट प्राइस!'
+                : 'All stationery items in one place - Best quality, Best prices!'}
+            </p>
+          </div>
+          
+          {/* Featured Products */}
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-10">
+            {[
+              { icon: Pencil, name: language === 'hi' ? 'पेन और पेंसिल' : 'Pens & Pencils', price: '₹10+', color: 'bg-primary', hot: true },
+              { icon: BookOpen, name: language === 'hi' ? 'नोटबुक' : 'Notebooks', price: '₹30+', color: 'bg-success', hot: true },
+              { icon: Calculator, name: language === 'hi' ? 'कैलकुलेटर' : 'Calculators', price: '₹150+', color: 'bg-secondary', hot: false },
+              { icon: Package, name: language === 'hi' ? 'एग्जाम किट' : 'Exam Kits', price: '₹99', color: 'bg-accent', hot: true },
+              { icon: ShoppingBag, name: language === 'hi' ? 'स्कूल बैग' : 'School Bags', price: '₹299+', color: 'bg-warning', hot: false },
+              { icon: BookOpen, name: language === 'hi' ? 'हाइलाइटर' : 'Highlighters', price: '₹20+', color: 'bg-pink-500', hot: true },
+            ].map((product, i) => (
+              <a 
+                key={i}
+                href={STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block group"
+              >
+                <Card className="card-hover overflow-hidden transition-all duration-300 hover:ring-2 hover:ring-success relative">
+                  {product.hot && (
+                    <div className="absolute top-2 right-2 bg-warning text-warning-foreground text-xs px-2 py-0.5 rounded-full font-bold z-10">
+                      HOT
+                    </div>
+                  )}
+                  <CardContent className="p-4 text-center">
+                    <div className={`w-12 h-12 ${product.color} rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}>
+                      <product.icon className="h-6 w-6 text-white" />
+                    </div>
+                    <p className="font-semibold text-sm mb-1">{product.name}</p>
+                    <p className="text-success font-bold">{product.price}</p>
+                    <p className="text-xs text-muted-foreground mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {language === 'hi' ? 'क्लिक करें →' : 'Click to buy →'}
+                    </p>
+                  </CardContent>
+                </Card>
+              </a>
+            ))}
+          </div>
+          
+          {/* Special Offer Banner */}
+          <div className="bg-gradient-to-r from-success via-primary to-secondary rounded-3xl p-8 md:p-10 text-white relative overflow-hidden mb-10">
+            <div className="absolute inset-0 bg-black/20"></div>
+            <div className="absolute top-5 right-5 w-20 h-20 border-2 border-white/20 rounded-full hidden md:block"></div>
+            <div className="absolute bottom-5 left-5 w-16 h-16 border-2 border-white/20 rounded-full hidden md:block"></div>
+            
+            <div className="relative grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-4">
+                  <Zap className="h-4 w-4" />
+                  <span className="font-bold">{language === 'hi' ? 'लिमिटेड टाइम ऑफर!' : 'Limited Time Offer!'}</span>
+                </div>
+                
+                <h3 className="text-3xl md:text-4xl font-bold mb-3">
+                  {language === 'hi' ? 'एग्जाम किट स्पेशल' : 'Exam Kit Special'}
+                </h3>
+                
+                <p className="text-white/90 mb-4">
+                  {language === 'hi' 
+                    ? 'पेन + पेंसिल + रबर + स्केल + शार्पनर - सब एक किट में!'
+                    : 'Pen + Pencil + Eraser + Scale + Sharpener - All in one kit!'}
+                </p>
+                
+                <div className="flex items-center gap-4">
+                  <span className="text-xl line-through text-white/60">₹150</span>
+                  <span className="text-4xl font-black">₹99</span>
+                  <span className="bg-warning text-warning-foreground px-3 py-1 rounded-full text-sm font-bold">
+                    {language === 'hi' ? '34% बचत' : 'Save 34%'}
+                  </span>
+                </div>
+              </div>
+              
+              <div className="text-center md:text-right">
+                <a 
+                  href={STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button size="lg" className="h-14 px-10 text-lg bg-white text-primary hover:bg-white/90 rounded-2xl shadow-xl hover:scale-105 transition-transform">
+                    {language === 'hi' ? 'अभी खरीदें' : 'Buy Now'}
+                    <ExternalLink className="ml-2 h-5 w-5" />
+                  </Button>
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          {/* Store Features */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            {[
+              { icon: Tag, text: language === 'hi' ? 'सबसे कम दाम' : 'Best Prices', desc: language === 'hi' ? 'होलसेल रेट्स' : 'Wholesale rates' },
+              { icon: CheckCircle, text: language === 'hi' ? 'क्वालिटी प्रोडक्ट्स' : 'Quality Products', desc: language === 'hi' ? 'ब्रांडेड आइटम्स' : 'Branded items' },
+              { icon: Truck, text: language === 'hi' ? 'होम डिलीवरी' : 'Home Delivery', desc: language === 'hi' ? '₹500+ पर फ्री' : 'Free above ₹500' },
+              { icon: Gift, text: language === 'hi' ? 'स्टूडेंट ऑफर्स' : 'Student Offers', desc: language === 'hi' ? 'स्पेशल डिस्काउंट' : 'Special discounts' },
+            ].map((feature, i) => (
+              <div key={i} className="flex items-center gap-3 p-4 bg-card rounded-xl shadow-sm">
+                <div className="w-10 h-10 bg-success/10 rounded-lg flex items-center justify-center">
+                  <feature.icon className="h-5 w-5 text-success" />
+                </div>
+                <div>
+                  <p className="font-semibold text-sm">{feature.text}</p>
+                  <p className="text-xs text-muted-foreground">{feature.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Main CTA */}
+          <div className="text-center">
+            <a 
+              href={STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button size="lg" className="h-14 px-12 text-lg bg-gradient-to-r from-success to-primary rounded-2xl shadow-xl hover:scale-105 transition-transform">
+                <ShoppingBag className="mr-2 h-5 w-5" />
+                {language === 'hi' ? 'स्टोर पर जाएं - 500+ प्रोडक्ट्स' : 'Visit Store - 500+ Products'}
+                <ExternalLink className="ml-2 h-5 w-5" />
+              </Button>
+            </a>
+          </div>
         </div>
       </section>
 
