@@ -146,8 +146,8 @@ export const Footer = () => {
             </p>
             <p className="text-background/60 text-sm">
               {language === 'hi' 
-                ? 'मेदिनी कुमार जी द्वारा स्थापित (IIT Madras Alumni)'
-                : 'Founded by Medinee Kumar (IIT Madras Alumni)'}
+                ? 'मेदिनी कुमार जी द्वारा स्थापित (Marine Engineer | IIT JEE 2006)'
+                : 'Founded by Medinee Kumar (Marine Engineer | IIT JEE 2006)'}
             </p>
           </div>
         </div>
