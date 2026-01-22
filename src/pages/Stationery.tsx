@@ -44,7 +44,8 @@ const Stationery = () => {
     productInterest: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const STORE_URL = "https://bizgrow360.com/s/scope-express-7c1ce756-c92e-4548-bd75-b6f85f9ced4e";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,13 +126,26 @@ const Stationery = () => {
             </div>
             
             <div className="flex flex-wrap gap-4 justify-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              <Button size="lg" className="h-14 px-8 bg-gradient-to-r from-secondary to-primary text-lg rounded-2xl shadow-lg">
-                {language === 'hi' ? 'अभी खरीदें' : 'Shop Now'}
-                <ChevronRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-2xl">
-                {language === 'hi' ? 'कैटलॉग देखें' : 'View Catalog'}
-              </Button>
+              <a 
+                href={STORE_URL} 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <Button size="lg" className="h-14 px-8 bg-gradient-to-r from-secondary to-primary text-lg rounded-2xl shadow-lg hover:scale-105 transition-transform">
+                  {language === 'hi' ? 'अभी खरीदें' : 'Shop Now'}
+                  <ExternalLink className="ml-2 h-5 w-5" />
+                </Button>
+              </a>
+              <a 
+                href={STORE_URL} 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <Button size="lg" variant="outline" className="h-14 px-8 text-lg rounded-2xl hover:scale-105 transition-transform">
+                  {language === 'hi' ? 'कैटलॉग देखें' : 'View Catalog'}
+                  <ExternalLink className="ml-2 h-4 w-4" />
+                </Button>
+              </a>
             </div>
           </div>
         </div>
@@ -170,28 +184,35 @@ const Stationery = () => {
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
             {products.map((product, index) => (
-              <Card 
-                key={index} 
-                className={`card-hover cursor-pointer relative overflow-hidden transition-all duration-300 ${
-                  selectedCategory === product.name ? 'ring-2 ring-primary' : ''
-                }`}
-                onClick={() => setSelectedCategory(selectedCategory === product.name ? null : product.name)}
+              <a
+                key={index}
+                href={STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
               >
-                {product.popular && (
-                  <div className="absolute top-2 right-2 bg-warning text-warning-foreground text-xs px-2 py-1 rounded-full font-bold">
-                    HOT
-                  </div>
-                )}
-                <CardContent className="p-6 text-center">
-                  <div className={`w-16 h-16 ${product.color} rounded-2xl flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110`}>
-                    <product.icon className="h-8 w-8 text-white" />
-                  </div>
-                  <p className="font-bold mb-1">
-                    {language === 'hi' ? product.nameHi : product.name}
-                  </p>
-                  <p className="text-primary font-semibold text-lg">{product.price}</p>
-                </CardContent>
-              </Card>
+                <Card 
+                  className="card-hover cursor-pointer relative overflow-hidden transition-all duration-300 hover:ring-2 hover:ring-primary group"
+                >
+                  {product.popular && (
+                    <div className="absolute top-2 right-2 bg-warning text-warning-foreground text-xs px-2 py-1 rounded-full font-bold">
+                      HOT
+                    </div>
+                  )}
+                  <CardContent className="p-6 text-center">
+                    <div className={`w-16 h-16 ${product.color} rounded-2xl flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110`}>
+                      <product.icon className="h-8 w-8 text-white" />
+                    </div>
+                    <p className="font-bold mb-1">
+                      {language === 'hi' ? product.nameHi : product.name}
+                    </p>
+                    <p className="text-primary font-semibold text-lg">{product.price}</p>
+                    <p className="text-xs text-muted-foreground mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {language === 'hi' ? 'खरीदने के लिए क्लिक करें →' : 'Click to buy →'}
+                    </p>
+                  </CardContent>
+                </Card>
+              </a>
             ))}
           </div>
         </div>
@@ -230,10 +251,16 @@ const Stationery = () => {
               </span>
             </div>
             
-            <Button size="lg" variant="secondary" className="h-14 px-10 text-lg bg-white text-primary hover:bg-white/90 rounded-2xl shadow-xl">
-              {language === 'hi' ? 'अभी खरीदें' : 'Buy Now'}
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            <a 
+              href={STORE_URL} 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <Button size="lg" variant="secondary" className="h-14 px-10 text-lg bg-white text-primary hover:bg-white/90 rounded-2xl shadow-xl hover:scale-105 transition-transform">
+                {language === 'hi' ? 'अभी खरीदें' : 'Buy Now'}
+                <ExternalLink className="ml-2 h-5 w-5" />
+              </Button>
+            </a>
           </div>
         </div>
       </section>
@@ -373,6 +400,27 @@ const Stationery = () => {
                           </>
                         )}
                       </Button>
+                      
+                      <div className="text-center mt-4">
+                        <span className="text-sm text-muted-foreground">{language === 'hi' ? 'या सीधे खरीदें' : 'Or buy directly'}</span>
+                      </div>
+                      
+                      <a 
+                        href={STORE_URL} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="block"
+                      >
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full h-14 text-lg font-bold rounded-xl border-2 border-primary hover:bg-primary/10"
+                          size="lg"
+                        >
+                          <ExternalLink className="mr-2 h-5 w-5" />
+                          {language === 'hi' ? 'स्टोर पर जाएं' : 'Visit Store'}
+                        </Button>
+                      </a>
                     </form>
                   </CardContent>
                 </Card>
@@ -381,6 +429,21 @@ const Stationery = () => {
           </Card>
         </div>
       </section>
+      
+      {/* Floating Store CTA */}
+      <a 
+        href={STORE_URL} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 md:hidden"
+      >
+        <Button 
+          size="lg" 
+          className="h-14 px-6 bg-gradient-to-r from-secondary to-primary text-lg rounded-full shadow-2xl hover:scale-105 transition-transform animate-pulse"
+        >
+          🛒 {language === 'hi' ? 'खरीदें' : 'Shop'}
+        </Button>
+      </a>
     </Layout>
   );
 };
