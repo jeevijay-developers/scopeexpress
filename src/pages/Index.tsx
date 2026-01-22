@@ -387,8 +387,11 @@ const Index = () => {
                   className="w-full max-w-md mx-auto rounded-3xl shadow-2xl"
                 />
                 <div className="absolute -bottom-4 -right-4 bg-primary text-primary-foreground px-6 py-3 rounded-2xl shadow-lg">
-                  <p className="font-bold">Mechanical Engineer</p>
-                  <p className="text-sm opacity-90">Educator & Mentor</p>
+                  <p className="font-bold">Marine Engineer</p>
+                  <p className="text-sm opacity-90">IIT JEE 2006</p>
+                </div>
+                <div className="absolute -top-4 -left-4 bg-success text-white px-4 py-2 rounded-xl shadow-lg text-sm font-bold animate-pulse">
+                  🌍 Global Experience
                 </div>
               </div>
             </div>
@@ -406,13 +409,13 @@ const Index = () => {
               </h2>
               
               <p className="text-xl text-primary font-medium mb-4">
-                {language === 'hi' ? 'मैकेनिकल इंजीनियर से अमरपाटन तक का सफर' : 'From Mechanical Engineer to Amarpatan'}
+                {language === 'hi' ? 'Marine Engineer | IIT JEE 2006 | वैश्विक अनुभव' : 'Marine Engineer | IIT JEE 2006 | Global Experience'}
               </p>
               
               <p className="text-muted-foreground mb-6 leading-relaxed">
                 {language === 'hi' 
-                  ? 'एक छोटे से गाँव से इंजीनियर तक का सफर। अब वही अनुभव और मार्गदर्शन अमरपाटन के हर छात्र के लिए उपलब्ध है। Scope Express के माध्यम से, मेदिनी कुमार जी हर student को उनके सपनों तक पहुंचने में मदद कर रहे हैं।'
-                  : 'From a small village to becoming an Engineer - a journey of dedication and hard work. Now, the same experience and guidance is available for every student in Amarpatan. Through Scope Express, Medinee Kumar is helping every student reach their dreams.'}
+                  ? 'एक छोटे से गाँव से 2006 में IIT JEE qualify करके Marine Engineer बने। चीन, जापान, कोरिया, अमेरिका, यूरोप, जर्मनी, कनाडा, ब्राज़ील, सऊदी अरब और सभी समुद्री देशों में काम करने का वैश्विक अनुभव। अब वही अनुभव अमरपाटन के छात्रों के लिए उपलब्ध है।'
+                  : 'From a small village, qualified IIT JEE in 2006 and became a Marine Engineer. Global working experience in China, Japan, Korea, USA, Europe, Germany, Canada, Brazil, Saudi Arabia, and all maritime countries. Now that same experience is available for students in Amarpatan.'}
               </p>
               
               <div className="grid grid-cols-2 gap-4 mb-6">
@@ -425,7 +428,7 @@ const Index = () => {
                 <div className="flex items-center gap-3 p-3 bg-card rounded-xl">
                   <Zap className="h-5 w-5 text-warning" />
                   <span className="text-sm font-medium">
-                    {language === 'hi' ? '5+ वर्षों का अनुभव' : '5+ Years Experience'}
+                    {language === 'hi' ? '10+ देशों का अनुभव' : '10+ Countries Experience'}
                   </span>
                 </div>
               </div>
@@ -564,6 +567,37 @@ const Index = () => {
         <div className="absolute top-1/3 right-1/4 text-2xl animate-float hidden md:block" style={{ animationDelay: '0.5s' }}>📐</div>
         
         <div className="container mx-auto px-4 relative">
+          {/* Blinking Online Order Banner */}
+          <a 
+            href={STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block mb-10 bg-gradient-to-r from-success via-emerald-500 to-teal-500 rounded-2xl p-4 text-white relative overflow-hidden shadow-xl hover:scale-[1.02] transition-transform"
+          >
+            <div className="absolute inset-0 bg-white/10 animate-pulse"></div>
+            <div className="relative flex flex-col md:flex-row items-center justify-center gap-4">
+              <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full animate-bounce-slow">
+                <ShoppingBag className="h-5 w-5" />
+                <span className="font-bold">
+                  {language === 'hi' ? '🛒 ऑनलाइन स्टोर' : '🛒 ONLINE STORE'}
+                </span>
+              </div>
+              <div className="text-center">
+                <p className="text-lg md:text-xl font-bold flex items-center gap-2 justify-center">
+                  <span className="inline-block animate-bounce" style={{ animationDuration: '1s' }}>🎉</span>
+                  {language === 'hi' 
+                    ? 'हम ऑनलाइन ऑर्डर स्वीकार करते हैं! स्टोर पर जाएं →'
+                    : 'We Accept Online Orders! Visit Store →'}
+                  <span className="inline-block animate-bounce" style={{ animationDuration: '1s', animationDelay: '0.3s' }}>🎉</span>
+                </p>
+                <p className="text-sm text-white/90">
+                  {language === 'hi' ? '500+ प्रोडक्ट्स • होम डिलीवरी • बेस्ट प्राइस' : '500+ Products • Home Delivery • Best Prices'}
+                </p>
+              </div>
+              <ExternalLink className="h-5 w-5 hidden md:block" />
+            </div>
+          </a>
+          
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 bg-success/20 text-success px-4 py-2 rounded-full mb-4 animate-bounce-slow">
               <Tag className="h-4 w-4" />

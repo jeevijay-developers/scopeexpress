@@ -113,10 +113,10 @@ const About = () => {
                         className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-3xl shadow-2xl border-4 border-white/20"
                       />
                       <div className="absolute -top-4 -right-4 bg-warning text-warning-foreground px-4 py-2 rounded-2xl shadow-lg animate-bounce-slow">
-                        <p className="font-bold text-sm">🎓 Mech Engineer</p>
+                        <p className="font-bold text-sm">🚢 Marine Engineer</p>
                       </div>
                       <div className="absolute -bottom-4 -left-4 bg-success text-success-foreground px-4 py-2 rounded-2xl shadow-lg">
-                        <p className="font-bold text-sm">⭐ 5+ Years</p>
+                        <p className="font-bold text-sm">🌍 Global Experience</p>
                       </div>
                     </div>
                   </div>
@@ -127,29 +127,29 @@ const About = () => {
                       {language === 'hi' ? 'मेदिनी कुमार' : 'Medinee Kumar'}
                     </h3>
                     <p className="text-primary font-medium mb-6">
-                      {language === 'hi' ? 'संस्थापक | मैकेनिकल इंजीनियर | शिक्षक' : 'Founder | Mechanical Engineer | Educator'}
+                      {language === 'hi' ? 'संस्थापक | Marine Engineer | IIT JEE 2006' : 'Founder | Marine Engineer | IIT JEE 2006'}
                     </p>
 
                     <div className="space-y-4 text-muted-foreground mb-8">
                       <p className="leading-relaxed">
                         {language === 'hi' 
-                          ? 'मध्य प्रदेश के एक छोटे से गाँव से इंजीनियर तक का सफर - मेदिनी कुमार जी ने साबित किया है कि सही मार्गदर्शन से कोई भी सपना पूरा हो सकता है।'
-                          : 'From a small village in Madhya Pradesh to becoming an Engineer - Medinee Kumar ji has proven that with right guidance, any dream is achievable.'}
+                          ? 'मध्य प्रदेश के एक छोटे से गाँव से 2006 में IIT JEE qualify करके Marine Engineer बने। चीन, जापान, कोरिया, अमेरिका, यूरोप, जर्मनी, कनाडा, ब्राज़ील, सऊदी अरब और सभी समुद्री देशों में काम करने का वैश्विक अनुभव।'
+                          : 'From a small village, qualified IIT JEE in 2006 and became a Marine Engineer. Global working experience in China, Japan, Korea, USA, Europe, Germany, Canada, Brazil, Saudi Arabia, and all maritime countries.'}
                       </p>
                       <p className="leading-relaxed">
                         {language === 'hi' 
-                          ? 'अपने अनुभव और ज्ञान को अमरपाटन के छात्रों के साथ साझा करने के लिए, उन्होंने Scope Express की स्थापना की। आज, वे सैकड़ों छात्रों को उनके शैक्षिक और करियर लक्ष्यों तक पहुँचने में मदद कर रहे हैं।'
-                          : 'To share his experience and knowledge with students of Amarpatan, he founded Scope Express. Today, he helps hundreds of students reach their academic and career goals.'}
+                          ? 'अपने वैश्विक अनुभव और ज्ञान को अमरपाटन के छात्रों के साथ साझा करने के लिए, उन्होंने Scope Express की स्थापना की। आज, वे सैकड़ों छात्रों को उनके शैक्षिक और करियर लक्ष्यों तक पहुँचने में मदद कर रहे हैं।'
+                          : 'To share his global experience and knowledge with students of Amarpatan, he founded Scope Express. Today, he helps hundreds of students reach their academic and career goals.'}
                       </p>
                     </div>
 
                     {/* Achievements */}
                     <div className="grid grid-cols-2 gap-4">
                       {[
-                        { icon: GraduationCap, text: language === 'hi' ? 'मैकेनिकल इंजीनियर' : 'Mechanical Engineer' },
+                        { icon: GraduationCap, text: language === 'hi' ? 'Marine Engineer' : 'Marine Engineer' },
                         { icon: Users, text: language === 'hi' ? '500+ छात्र मार्गदर्शित' : '500+ Students Mentored' },
-                        { icon: Award, text: language === 'hi' ? 'पुरस्कृत शिक्षक' : 'Award-Winning Educator' },
-                        { icon: Heart, text: language === 'hi' ? 'समुदाय सेवक' : 'Community Leader' },
+                        { icon: Award, text: language === 'hi' ? 'IIT JEE 2006' : 'IIT JEE 2006' },
+                        { icon: Heart, text: language === 'hi' ? 'वैश्विक अनुभव' : 'Global Experience' },
                       ].map((item, i) => (
                         <div key={i} className="flex items-center gap-3 p-3 bg-muted/50 rounded-xl">
                           <item.icon className="h-5 w-5 text-primary" />
@@ -172,8 +172,8 @@ const About = () => {
             <Quote className="h-12 w-12 mx-auto mb-6 opacity-50" />
             <blockquote className="text-xl md:text-2xl italic mb-6 leading-relaxed">
               {language === 'hi' 
-                ? '"मध्य प्रदेश के एक छोटे से गाँव से इंजीनियर तक - मैंने सीखा कि सही मार्गदर्शन और संसाधनों के साथ, कोई भी छात्र अपने सपने पूरे कर सकता है। Scope Express मेरा तरीका है उस समुदाय को वापस देने का जिसने मुझे पाला।"'
-                : '"From a small village in Madhya Pradesh to becoming an Engineer - I learned that with the right guidance and resources, any student can achieve their dreams. Scope Express is my way of giving back to the community that raised me."'}
+                ? '"एक छोटे से गाँव से IIT JEE 2006 qualify करके Marine Engineer बना और दुनिया के कई देशों में काम किया। अब मैं उसी अनुभव से अमरपाटन के छात्रों को उनके सपने पूरे करने में मदद कर रहा हूं।"'
+                : '"From a small village, I qualified IIT JEE in 2006, became a Marine Engineer, and worked across many countries worldwide. Now I use that experience to help students in Amarpatan achieve their dreams."'}
             </blockquote>
             <div className="flex items-center justify-center gap-3">
               <img src={medineeKumar} alt="Medinee Kumar" className="w-12 h-12 rounded-full object-cover border-2 border-white/50" />

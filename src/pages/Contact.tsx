@@ -332,7 +332,7 @@ const Contact = () => {
                           {language === 'hi' ? 'मेदिनी कुमार जी' : 'Medinee Kumar Ji'}
                         </h3>
                         <p className="text-sm text-white/80">
-                          {language === 'hi' ? 'संस्थापक | Mechanical Engineer' : 'Founder | Mechanical Engineer'}
+                          {language === 'hi' ? 'Marine Engineer | IIT JEE 2006 | Global Experience' : 'Marine Engineer | IIT JEE 2006 | Global Experience'}
                         </p>
                       </div>
                     </div>

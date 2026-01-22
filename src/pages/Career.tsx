@@ -163,7 +163,10 @@ const Career = () => {
                 />
                 <div className="absolute -bottom-4 -right-4 bg-primary text-primary-foreground px-6 py-3 rounded-2xl shadow-lg">
                   <p className="font-bold">Medinee Kumar</p>
-                  <p className="text-sm opacity-90">Mechanical Engineer</p>
+                  <p className="text-sm opacity-90">Marine Engineer | IIT JEE 2006</p>
+                </div>
+                <div className="absolute -top-4 -left-4 bg-success text-white px-4 py-2 rounded-xl shadow-lg text-sm font-bold">
+                  🌍 Global Experience
                 </div>
               </div>
             </div>
@@ -422,8 +425,8 @@ const Career = () => {
           
           <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
             {[
-              { icon: Award, title: language === 'hi' ? 'मैकेनिकल इंजीनियर' : 'Mechanical Engineer', desc: language === 'hi' ? 'अनुभवी मेंटर' : 'Experienced Mentor' },
-              { icon: Target, title: language === 'hi' ? 'व्यक्तिगत' : 'Personal', desc: language === 'hi' ? 'One-on-One Guidance' : 'One-on-One Guidance' },
+              { icon: Award, title: language === 'hi' ? 'Marine Engineer' : 'Marine Engineer', desc: language === 'hi' ? 'IIT JEE 2006' : 'IIT JEE 2006' },
+              { icon: Target, title: language === 'hi' ? 'वैश्विक अनुभव' : 'Global Experience', desc: language === 'hi' ? '10+ देशों में काम' : '10+ Countries' },
               { icon: Users, title: language === 'hi' ? '500+' : '500+', desc: language === 'hi' ? 'Students Guided' : 'Students Guided' },
               { icon: Star, title: language === 'hi' ? 'Free' : 'Free', desc: language === 'hi' ? 'Career Counseling' : 'Career Counseling' },
             ].map((item, i) => (
