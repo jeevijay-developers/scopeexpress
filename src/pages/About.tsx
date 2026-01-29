@@ -206,7 +206,7 @@ const About = () => {
                     <p className="text-muted-foreground leading-relaxed">
                       {language === 'hi' 
                         ? 'जब मेदिनी कुमार जी IIT से लौटे, उन्होंने देखा कि अमरपाटन के छात्रों को सही मार्गदर्शन नहीं मिल रहा। इसी सोच से Scope Express का जन्म हुआ।'
-                        : 'When Medinee Kumar returned from IIT, he saw that students in Amarpatan lacked proper guidance. This thought gave birth to Scope Express.'}
+                        : 'When Medinee Kumar returned from IIT, he observed that students in Amarpatan lacked proper guidance. This thought gave birth to Scope Express.'}
                     </p>
                   </div>
                 </CardContent>
