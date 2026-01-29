@@ -139,7 +139,7 @@ const About = () => {
                       <p className="leading-relaxed">
                         {language === 'hi' 
                           ? 'अपने वैश्विक अनुभव और ज्ञान को अमरपाटन के छात्रों के साथ साझा करने के लिए, उन्होंने Scope Express की स्थापना की। आज, वे सैकड़ों छात्रों को उनके शैक्षिक और करियर लक्ष्यों तक पहुँचने में मदद कर रहे हैं।'
-                          : 'To share his global experience and knowledge with students of Amarpatan, he founded Scope Express. Today, he helps hundreds of students reach their academic and career goals.'}
+                          : 'To share his global experience and knowledge with students of his society, he founded Scope Express. Today, he helps hundreds of students reach their academic and career goals.'}
                       </p>
                     </div>
 
