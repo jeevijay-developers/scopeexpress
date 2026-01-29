@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Plus, Edit2, Trash2, Search, Filter, Save, X, HelpCircle, RefreshCw } from 'lucide-react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { Plus, Edit2, Trash2, Search, Filter, Save, X, HelpCircle, RefreshCw, Upload, Download, FileSpreadsheet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -49,6 +49,11 @@ const QuestionManager = () => {
   const [formClassLevel, setFormClassLevel] = useState('6');
   const [formLanguage, setFormLanguage] = useState('en');
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Bulk upload state
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadResults, setUploadResults] = useState<{ success: number; failed: number; errors: string[] } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchQuestions();
@@ -197,6 +202,215 @@ const QuestionManager = () => {
     }
   };
 
+  const generateSampleCSV = () => {
+    const headers = ['question', 'option1', 'option2', 'option3', 'option4', 'correct_answer', 'topic', 'class_level', 'language'];
+    const sampleRows = [
+      ['What is 2 + 2?', '3', '4', '5', '6', '2', 'maths', '6', 'en'],
+      ['What is the capital of India?', 'Mumbai', 'Delhi', 'Kolkata', 'Chennai', '2', 'gk', '7', 'en'],
+      ['भारत की राजधानी क्या है?', 'मुंबई', 'दिल्ली', 'कोलकाता', 'चेन्नई', '2', 'gk', '7', 'hi'],
+    ];
+    
+    const csvContent = [
+      headers.join(','),
+      ...sampleRows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'sample_questions.csv';
+    link.click();
+    URL.revokeObjectURL(link.href);
+    toast.success('Sample CSV downloaded!');
+  };
+
+  const parseCSV = (text: string): string[][] => {
+    const rows: string[][] = [];
+    let currentRow: string[] = [];
+    let currentCell = '';
+    let insideQuotes = false;
+    
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      const nextChar = text[i + 1];
+      
+      if (char === '"') {
+        if (insideQuotes && nextChar === '"') {
+          currentCell += '"';
+          i++;
+        } else {
+          insideQuotes = !insideQuotes;
+        }
+      } else if (char === ',' && !insideQuotes) {
+        currentRow.push(currentCell.trim());
+        currentCell = '';
+      } else if ((char === '\n' || (char === '\r' && nextChar === '\n')) && !insideQuotes) {
+        currentRow.push(currentCell.trim());
+        if (currentRow.some(cell => cell !== '')) {
+          rows.push(currentRow);
+        }
+        currentRow = [];
+        currentCell = '';
+        if (char === '\r') i++;
+      } else {
+        currentCell += char;
+      }
+    }
+    
+    if (currentCell || currentRow.length > 0) {
+      currentRow.push(currentCell.trim());
+      if (currentRow.some(cell => cell !== '')) {
+        rows.push(currentRow);
+      }
+    }
+    
+    return rows;
+  };
+
+  const handleBulkUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.name.endsWith('.csv')) {
+      toast.error('Please upload a CSV file');
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadResults(null);
+
+    try {
+      const text = await file.text();
+      const rows = parseCSV(text);
+      
+      if (rows.length < 2) {
+        toast.error('CSV file is empty or has no data rows');
+        setIsUploading(false);
+        return;
+      }
+
+      const headers = rows[0].map(h => h.toLowerCase().trim());
+      const requiredHeaders = ['question', 'option1', 'option2', 'option3', 'option4', 'correct_answer', 'topic', 'class_level', 'language'];
+      
+      const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
+      if (missingHeaders.length > 0) {
+        toast.error(`Missing required columns: ${missingHeaders.join(', ')}`);
+        setIsUploading(false);
+        return;
+      }
+
+      const getIndex = (name: string) => headers.indexOf(name);
+      
+      let successCount = 0;
+      let failedCount = 0;
+      const errors: string[] = [];
+      const questionsToInsert: Array<{
+        question: string;
+        options: Json;
+        correct_answer: number;
+        topic: string;
+        class_level: string;
+        language: string;
+      }> = [];
+
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const rowNum = i + 1;
+
+        try {
+          const question = row[getIndex('question')]?.trim();
+          const option1 = row[getIndex('option1')]?.trim();
+          const option2 = row[getIndex('option2')]?.trim();
+          const option3 = row[getIndex('option3')]?.trim();
+          const option4 = row[getIndex('option4')]?.trim();
+          const correctAnswerStr = row[getIndex('correct_answer')]?.trim();
+          const topic = row[getIndex('topic')]?.trim().toLowerCase();
+          const classLevel = row[getIndex('class_level')]?.trim();
+          const language = row[getIndex('language')]?.trim().toLowerCase();
+
+          if (!question) {
+            errors.push(`Row ${rowNum}: Question is empty`);
+            failedCount++;
+            continue;
+          }
+
+          if (!option1 || !option2 || !option3 || !option4) {
+            errors.push(`Row ${rowNum}: All 4 options are required`);
+            failedCount++;
+            continue;
+          }
+
+          const correctAnswer = parseInt(correctAnswerStr);
+          if (isNaN(correctAnswer) || correctAnswer < 1 || correctAnswer > 4) {
+            errors.push(`Row ${rowNum}: correct_answer must be 1, 2, 3, or 4`);
+            failedCount++;
+            continue;
+          }
+
+          if (!TOPICS.includes(topic)) {
+            errors.push(`Row ${rowNum}: Invalid topic "${topic}". Must be one of: ${TOPICS.join(', ')}`);
+            failedCount++;
+            continue;
+          }
+
+          if (!CLASS_LEVELS.includes(classLevel)) {
+            errors.push(`Row ${rowNum}: Invalid class_level "${classLevel}". Must be one of: ${CLASS_LEVELS.join(', ')}`);
+            failedCount++;
+            continue;
+          }
+
+          if (!LANGUAGES.includes(language)) {
+            errors.push(`Row ${rowNum}: Invalid language "${language}". Must be "en" or "hi"`);
+            failedCount++;
+            continue;
+          }
+
+          questionsToInsert.push({
+            question,
+            options: [option1, option2, option3, option4] as unknown as Json,
+            correct_answer: correctAnswer - 1,
+            topic,
+            class_level: classLevel,
+            language,
+          });
+          successCount++;
+        } catch (err) {
+          errors.push(`Row ${rowNum}: Failed to parse row`);
+          failedCount++;
+        }
+      }
+
+      if (questionsToInsert.length > 0) {
+        const { error } = await supabase
+          .from('quiz_questions')
+          .insert(questionsToInsert);
+
+        if (error) {
+          toast.error('Failed to insert questions into database');
+          console.error('Insert error:', error);
+          setUploadResults({ success: 0, failed: rows.length - 1, errors: ['Database insert failed: ' + error.message] });
+        } else {
+          setUploadResults({ success: successCount, failed: failedCount, errors: errors.slice(0, 10) });
+          if (successCount > 0) {
+            toast.success(`Successfully uploaded ${successCount} questions!`);
+            fetchQuestions();
+          }
+        }
+      } else {
+        setUploadResults({ success: 0, failed: failedCount, errors: errors.slice(0, 10) });
+        toast.error('No valid questions found in CSV');
+      }
+    } catch (error) {
+      console.error('Error parsing CSV:', error);
+      toast.error('Failed to parse CSV file');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* AI Quiz Generator */}
@@ -210,10 +424,30 @@ const QuestionManager = () => {
               <Filter className="h-5 w-5" />
               Question Bank ({questions.length} total)
             </CardTitle>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" onClick={fetchQuestions}>
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Refresh
+              </Button>
+              <Button variant="outline" size="sm" onClick={generateSampleCSV}>
+                <Download className="h-4 w-4 mr-2" />
+                Sample CSV
+              </Button>
+              <input
+                type="file"
+                accept=".csv"
+                onChange={handleBulkUpload}
+                ref={fileInputRef}
+                className="hidden"
+              />
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                {isUploading ? 'Uploading...' : 'Bulk Upload'}
               </Button>
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
@@ -370,6 +604,49 @@ const QuestionManager = () => {
               </SelectContent>
             </Select>
           </div>
+
+          {/* Upload Results */}
+          {uploadResults && (
+            <div className="mt-4 p-4 rounded-lg border bg-muted/50">
+              <div className="flex items-center gap-2 mb-2">
+                <FileSpreadsheet className="h-5 w-5" />
+                <h4 className="font-medium">Upload Results</h4>
+              </div>
+              <div className="flex gap-4 mb-2">
+                <Badge variant="outline" className="border-primary/30 bg-primary/10 text-primary">
+                  ✓ {uploadResults.success} uploaded
+                </Badge>
+                {uploadResults.failed > 0 && (
+                  <Badge variant="destructive">
+                    ✗ {uploadResults.failed} failed
+                  </Badge>
+                )}
+              </div>
+              {uploadResults.errors.length > 0 && (
+                <div className="mt-2">
+                  <p className="text-sm text-muted-foreground mb-1">Errors:</p>
+                  <ul className="text-sm text-destructive space-y-1">
+                    {uploadResults.errors.map((err, i) => (
+                      <li key={i}>• {err}</li>
+                    ))}
+                  </ul>
+                  {uploadResults.errors.length === 10 && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      (Showing first 10 errors)
+                    </p>
+                  )}
+                </div>
+              )}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="mt-2" 
+                onClick={() => setUploadResults(null)}
+              >
+                <X className="h-4 w-4 mr-1" /> Dismiss
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
