@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Snowflake, Wifi, MonitorSmartphone, BatteryCharging, Cctv, ArrowRight, CheckCircle,
   Clock, Users, Star, MapPin, Phone, Sparkles, BookOpen, Coffee, Zap, Crown,
-  Shield, Headphones, Lamp, Volume2, GraduationCap
+  Shield, Headphones, Lamp, Volume2, GraduationCap, ArrowLeft, Building2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,6 +16,23 @@ import { toast } from 'sonner';
 import libraryInterior from '@/assets/library-interior.jpg';
 import heroStudents from '@/assets/hero-students.jpg';
 import medineeKumar from '@/assets/medinee-kumar.png';
+import CitySearch from '@/components/library/CitySearch';
+import LibraryCard from '@/components/library/LibraryCard';
+import type { City } from '@/data/indianCities';
+
+interface Library {
+  id: string;
+  name: string;
+  city: string;
+  state: string;
+  address: string;
+  pin_code: string | null;
+  phone: string | null;
+  facilities: string[];
+  timings: string;
+  seats: number;
+  price_per_month: number;
+}
 
 const facilities = [
   { icon: Snowflake, key: 'ac', desc: 'Full AC', color: 'bg-blue-500' },
@@ -43,6 +60,12 @@ const plans = [
 
 const Library = () => {
   const { t, language } = useLanguage();
+  const [selectedCity, setSelectedCity] = useState<City | null>(null);
+  const [libraries, setLibraries] = useState<Library[]>([]);
+  const [isLoadingLibraries, setIsLoadingLibraries] = useState(false);
+  const [selectedLibrary, setSelectedLibrary] = useState<Library | null>(null);
+  const [showEnquiryForm, setShowEnquiryForm] = useState(false);
+  
   const [formData, setFormData] = useState({
     name: '',
     mobile: '',
@@ -50,6 +73,60 @@ const Library = () => {
     timing: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Fetch libraries when city is selected
+  useEffect(() => {
+    if (selectedCity) {
+      fetchLibraries(selectedCity.name);
+    }
+  }, [selectedCity]);
+
+  const fetchLibraries = async (cityName: string) => {
+    setIsLoadingLibraries(true);
+    try {
+      const { data, error } = await supabase
+        .from('libraries')
+        .select('*')
+        .eq('city', cityName)
+        .eq('is_active', true);
+
+      if (error) throw error;
+
+      const parsedData = (data || []).map(lib => ({
+        ...lib,
+        facilities: Array.isArray(lib.facilities) ? (lib.facilities as string[]) : [],
+      }));
+
+      setLibraries(parsedData);
+    } catch (error) {
+      console.error('Error fetching libraries:', error);
+      toast.error('Failed to fetch libraries');
+    } finally {
+      setIsLoadingLibraries(false);
+    }
+  };
+
+  const handleCitySelect = (city: City) => {
+    setSelectedCity(city);
+    setSelectedLibrary(null);
+    setShowEnquiryForm(false);
+  };
+
+  const handleJoinClick = (library: Library) => {
+    setSelectedLibrary(library);
+    setShowEnquiryForm(true);
+    // Scroll to form
+    setTimeout(() => {
+      document.getElementById('enquiry-form')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  const handleBackToSearch = () => {
+    setSelectedCity(null);
+    setLibraries([]);
+    setSelectedLibrary(null);
+    setShowEnquiryForm(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,12 +144,15 @@ const Library = () => {
         source_page: 'Library',
         interest_type: 'Library Membership',
         preferred_timing: formData.timing,
+        city: selectedCity?.name || null,
+        library_id: selectedLibrary?.id || null,
       });
 
       if (error) throw error;
 
       toast.success(t('common.success'));
       setFormData({ name: '', mobile: '', classLevel: '', timing: '' });
+      setShowEnquiryForm(false);
     } catch (error) {
       console.error('Error submitting form:', error);
       toast.error(t('common.error'));
@@ -138,7 +218,11 @@ const Library = () => {
             </div>
             
             <div className="flex flex-wrap gap-4 animate-fade-in" style={{ animationDelay: '0.25s' }}>
-              <Button size="lg" className="h-14 px-8 bg-primary hover:bg-primary/90 text-lg rounded-2xl shadow-lg">
+              <Button 
+                size="lg" 
+                className="h-14 px-8 bg-primary hover:bg-primary/90 text-lg rounded-2xl shadow-lg"
+                onClick={() => document.getElementById('city-search')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 {language === 'hi' ? 'अभी Join करें' : 'Join Now'} 
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -151,8 +235,76 @@ const Library = () => {
         </div>
       </section>
 
+      {/* City Search Section */}
+      <section id="city-search" className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          {!selectedCity ? (
+            <CitySearch onCitySelect={handleCitySelect} language={language} />
+          ) : (
+            <div className="space-y-8">
+              {/* Back button and city info */}
+              <div className="flex items-center gap-4">
+                <Button variant="outline" onClick={handleBackToSearch} className="rounded-xl">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  {language === 'hi' ? 'दूसरा शहर चुनें' : 'Change City'}
+                </Button>
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5 text-primary" />
+                  <span className="font-semibold text-lg">{selectedCity.name}, {selectedCity.state}</span>
+                </div>
+              </div>
+
+              {/* Libraries List */}
+              {isLoadingLibraries ? (
+                <div className="text-center py-12">
+                  <div className="animate-spin h-10 w-10 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+                  <p className="text-muted-foreground">
+                    {language === 'hi' ? 'Libraries खोज रहे हैं...' : 'Finding libraries...'}
+                  </p>
+                </div>
+              ) : libraries.length > 0 ? (
+                <div>
+                  <h3 className="text-xl font-bold mb-6">
+                    {language === 'hi' 
+                      ? `${selectedCity.name} में ${libraries.length} Libraries मिलीं`
+                      : `Found ${libraries.length} Libraries in ${selectedCity.name}`}
+                  </h3>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {libraries.map((library) => (
+                      <LibraryCard
+                        key={library.id}
+                        library={library}
+                        onJoinClick={handleJoinClick}
+                        language={language}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <Card className="max-w-lg mx-auto text-center">
+                  <CardContent className="pt-12 pb-8">
+                    <Building2 className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                    <h3 className="text-xl font-bold mb-2">
+                      {language === 'hi' ? 'जल्द आ रहा है!' : 'Coming Soon!'}
+                    </h3>
+                    <p className="text-muted-foreground mb-6">
+                      {language === 'hi' 
+                        ? `${selectedCity.name} में अभी कोई library नहीं है। लेकिन जल्द ही आ रहा है!`
+                        : `No library in ${selectedCity.name} yet. But we're expanding soon!`}
+                    </p>
+                    <Button onClick={() => setShowEnquiryForm(true)}>
+                      {language === 'hi' ? 'मुझे सूचित करें' : 'Notify Me'}
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Facilities Grid */}
-      <section className="py-12 md:py-16 bg-muted/30">
+      <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-4xl font-bold text-center mb-4">
             {language === 'hi' ? '✨ प्रीमियम सुविधाएं' : '✨ Premium Facilities'}
@@ -178,7 +330,7 @@ const Library = () => {
       </section>
 
       {/* Pricing Plans */}
-      <section className="py-16">
+      <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-4xl font-bold text-center mb-4">
             {language === 'hi' ? '💰 मेम्बरशिप प्लान' : '💰 Membership Plans'}
@@ -214,7 +366,11 @@ const Library = () => {
                     ))}
                   </div>
                   
-                  <Button className={`w-full ${plan.popular ? 'bg-primary' : ''}`} variant={plan.popular ? 'default' : 'outline'}>
+                  <Button 
+                    className={`w-full ${plan.popular ? 'bg-primary' : ''}`} 
+                    variant={plan.popular ? 'default' : 'outline'}
+                    onClick={() => document.getElementById('city-search')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
                     {language === 'hi' ? 'चुनें' : 'Select'}
                   </Button>
                 </CardContent>
@@ -225,7 +381,7 @@ const Library = () => {
       </section>
 
       {/* Why Our Library */}
-      <section className="py-12 md:py-16 bg-muted/30">
+      <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1">
@@ -282,60 +438,8 @@ const Library = () => {
         </div>
       </section>
 
-      {/* Location & Timings */}
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8">
-            <Card className="shadow-xl animate-fade-in">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-warning/10 rounded-xl flex items-center justify-center">
-                    <Clock className="h-5 w-5 text-warning" />
-                  </div>
-                  {language === 'hi' ? 'खुलने का समय' : 'Opening Hours'}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
-                    <span className="font-medium">{language === 'hi' ? 'सोमवार - शनिवार' : 'Monday - Saturday'}</span>
-                    <span className="font-bold text-primary text-lg">6:00 AM - 10:00 PM</span>
-                  </div>
-                  <div className="flex justify-between items-center p-4 bg-muted rounded-xl">
-                    <span className="font-medium">{language === 'hi' ? 'रविवार' : 'Sunday'}</span>
-                    <span className="font-bold text-primary text-lg">8:00 AM - 8:00 PM</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="shadow-xl animate-fade-in" style={{ animationDelay: '0.1s' }}>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-                    <MapPin className="h-5 w-5 text-primary" />
-                  </div>
-                  {language === 'hi' ? 'हमारा पता' : 'Our Location'}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <p className="text-xl font-bold">Scope Express Library</p>
-                  <p className="text-muted-foreground">{t('contact.address.value')}</p>
-                  <p className="text-muted-foreground">Pin Code: 485776</p>
-                  <a href="tel:+916265368438" className="inline-flex items-center gap-2 text-primary font-bold text-lg hover:underline">
-                    <Phone className="h-5 w-5" />
-                    +91 62653 68438
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
       {/* Enquiry Form */}
-      <section className="py-12 md:py-16 bg-gradient-to-r from-primary/10 via-accent/5 to-secondary/10">
+      <section id="enquiry-form" className="py-12 md:py-16 bg-gradient-to-r from-primary/10 via-accent/5 to-secondary/10">
         <div className="container mx-auto px-4">
           <Card className="max-w-lg mx-auto shadow-2xl animate-scale-in">
             <CardHeader className="text-center">
@@ -346,6 +450,17 @@ const Library = () => {
               <p className="text-muted-foreground mt-2">
                 {language === 'hi' ? '🎯 आज ही अपनी seat book करें!' : '🎯 Book your seat today!'}
               </p>
+              {selectedCity && (
+                <div className="mt-3 inline-flex items-center gap-2 bg-primary/10 px-3 py-1.5 rounded-full">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">{selectedCity.name}</span>
+                </div>
+              )}
+              {selectedLibrary && (
+                <div className="mt-2 text-sm text-muted-foreground">
+                  {selectedLibrary.name}
+                </div>
+              )}
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">

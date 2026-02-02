@@ -38,10 +38,12 @@ export type Database = {
       leads: {
         Row: {
           career_interest: string | null
+          city: string | null
           class: string | null
           created_at: string
           id: string
           interest_type: string | null
+          library_id: string | null
           message: string | null
           mobile: string
           name: string
@@ -55,10 +57,12 @@ export type Database = {
         }
         Insert: {
           career_interest?: string | null
+          city?: string | null
           class?: string | null
           created_at?: string
           id?: string
           interest_type?: string | null
+          library_id?: string | null
           message?: string | null
           mobile: string
           name: string
@@ -72,10 +76,12 @@ export type Database = {
         }
         Update: {
           career_interest?: string | null
+          city?: string | null
           class?: string | null
           created_at?: string
           id?: string
           interest_type?: string | null
+          library_id?: string | null
           message?: string | null
           mobile?: string
           name?: string
@@ -86,6 +92,62 @@ export type Database = {
           quiz_topic?: string | null
           school?: string | null
           source_page?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_library_id_fkey"
+            columns: ["library_id"]
+            isOneToOne: false
+            referencedRelation: "libraries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      libraries: {
+        Row: {
+          address: string
+          city: string
+          created_at: string
+          facilities: Json | null
+          id: string
+          is_active: boolean | null
+          name: string
+          phone: string | null
+          pin_code: string | null
+          price_per_month: number | null
+          seats: number | null
+          state: string
+          timings: string | null
+        }
+        Insert: {
+          address: string
+          city: string
+          created_at?: string
+          facilities?: Json | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          phone?: string | null
+          pin_code?: string | null
+          price_per_month?: number | null
+          seats?: number | null
+          state: string
+          timings?: string | null
+        }
+        Update: {
+          address?: string
+          city?: string
+          created_at?: string
+          facilities?: Json | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          phone?: string | null
+          pin_code?: string | null
+          price_per_month?: number | null
+          seats?: number | null
+          state?: string
+          timings?: string | null
         }
         Relationships: []
       }
