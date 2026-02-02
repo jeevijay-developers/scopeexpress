@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { 
   LogOut, Users, Gamepad2, BarChart3, HelpCircle, 
   BookOpen, ShoppingBag, GraduationCap, Menu, X,
-  Home, Settings, ChevronRight, Sparkles, MessageSquare
+  Home, Settings, ChevronRight, Sparkles, MessageSquare, Building2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -17,6 +17,7 @@ import QuizSessionsTable from '@/components/admin/QuizSessionsTable';
 import AnalyticsDashboard from '@/components/admin/AnalyticsDashboard';
 import QuestionManager from '@/components/admin/QuestionManager';
 import LibraryManager from '@/components/admin/LibraryManager';
+import LibraryLocationsManager from '@/components/admin/LibraryLocationsManager';
 
 interface Lead {
   id: string;
@@ -49,7 +50,8 @@ interface QuizSession {
 const menuItems = [
   { id: 'overview', label: 'All Leads', icon: Users },
   { id: 'practice', label: 'Practice Quiz', icon: Gamepad2 },
-  { id: 'library', label: 'Library', icon: BookOpen },
+  { id: 'library', label: 'Library Enquiries', icon: BookOpen },
+  { id: 'library-locations', label: 'Library Locations', icon: Building2 },
   { id: 'career', label: 'Career Guidance', icon: GraduationCap },
   { id: 'stationery', label: 'Stationery', icon: ShoppingBag },
   { id: 'contact', label: 'Contact Forms', icon: MessageSquare },
@@ -127,6 +129,8 @@ const AdminDashboard = () => {
         return <LeadsTable leads={leads} quizSessions={quizSessions} isLoading={isLoading} sourceFilter="Free Practice" />;
       case 'library':
         return <LibraryManager leads={leads} isLoading={isLoading} />;
+      case 'library-locations':
+        return <LibraryLocationsManager />;
       case 'career':
         return <LeadsTable leads={leads} quizSessions={quizSessions} isLoading={isLoading} sourceFilter="Career Guidance" />;
       case 'stationery':
