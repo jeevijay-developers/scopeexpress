@@ -1,14 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
-import { BookOpen, Users, Calendar, Search, Filter, UserPlus, Edit2, Trash2 } from 'lucide-react';
+import { BookOpen, Users, Calendar, Search, Filter, MapPin, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
-import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Lead {
   id: string;
@@ -21,6 +18,13 @@ interface Lead {
   preferred_timing: string | null;
   message: string | null;
   created_at: string;
+  city: string | null;
+  library_id: string | null;
+}
+
+interface LibraryInfo {
+  id: string;
+  name: string;
 }
 
 interface LibraryManagerProps {
@@ -38,7 +42,20 @@ const MEMBERSHIP_TYPES = [
 
 const LibraryManager = ({ leads, isLoading }: LibraryManagerProps) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [librariesMap, setLibrariesMap] = useState<Record<string, string>>({});
+
+  // Fetch libraries to map library_id -> name
+  useEffect(() => {
+    const fetchLibraries = async () => {
+      const { data } = await supabase.from('libraries').select('id, name');
+      if (data) {
+        const map: Record<string, string> = {};
+        data.forEach((lib) => { map[lib.id] = lib.name; });
+        setLibrariesMap(map);
+      }
+    };
+    fetchLibraries();
+  }, []);
 
   // Filter leads that came from Library page
   const libraryLeads = useMemo(() => {
@@ -53,6 +70,7 @@ const LibraryManager = ({ leads, isLoading }: LibraryManagerProps) => {
       filtered = filtered.filter(lead => 
         lead.name.toLowerCase().includes(query) ||
         lead.mobile.includes(query) ||
+        (lead.city && lead.city.toLowerCase().includes(query)) ||
         (lead.school && lead.school.toLowerCase().includes(query))
       );
     }
@@ -168,7 +186,7 @@ const LibraryManager = ({ leads, isLoading }: LibraryManagerProps) => {
           <div className="relative max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search by name, mobile, school..."
+              placeholder="Search by name, mobile, city..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -202,8 +220,9 @@ const LibraryManager = ({ leads, isLoading }: LibraryManagerProps) => {
                   <TableRow>
                     <TableHead>Name</TableHead>
                     <TableHead>Mobile</TableHead>
+                    <TableHead>City</TableHead>
+                    <TableHead>Library</TableHead>
                     <TableHead>Class</TableHead>
-                    <TableHead>School</TableHead>
                     <TableHead>Interest</TableHead>
                     <TableHead>Preferred Timing</TableHead>
                     <TableHead>Date</TableHead>
@@ -218,8 +237,23 @@ const LibraryManager = ({ leads, isLoading }: LibraryManagerProps) => {
                           {lead.mobile}
                         </a>
                       </TableCell>
+                      <TableCell>
+                        {lead.city ? (
+                          <div className="flex items-center gap-1">
+                            <MapPin className="h-3 w-3 text-muted-foreground" />
+                            <span>{lead.city}</span>
+                          </div>
+                        ) : '-'}
+                      </TableCell>
+                      <TableCell>
+                        {lead.library_id && librariesMap[lead.library_id] ? (
+                          <div className="flex items-center gap-1">
+                            <Building2 className="h-3 w-3 text-muted-foreground" />
+                            <span className="max-w-[150px] truncate">{librariesMap[lead.library_id]}</span>
+                          </div>
+                        ) : '-'}
+                      </TableCell>
                       <TableCell>{lead.class || '-'}</TableCell>
-                      <TableCell className="max-w-[150px] truncate">{lead.school || '-'}</TableCell>
                       <TableCell>
                         <Badge variant="secondary">{lead.interest_type || 'Membership'}</Badge>
                       </TableCell>

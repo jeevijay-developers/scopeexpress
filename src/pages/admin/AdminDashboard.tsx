@@ -32,6 +32,8 @@ interface Lead {
   product_interest: string | null;
   message: string | null;
   created_at: string;
+  city: string | null;
+  library_id: string | null;
 }
 
 interface QuizSession {
