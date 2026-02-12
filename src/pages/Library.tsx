@@ -50,7 +50,7 @@ const timings = [
   'Full Day',
 ];
 
-const classes = ['6', '7', '8', '9', '10', '11', '12', 'College', 'Competitive Exams'];
+const classes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'College', 'Competitive Exams'];
 
 const plans = [
   { name: 'Basic', price: '₹500', features: ['General Seating', 'WiFi Access', 'Locker', '6AM-6PM'] },
