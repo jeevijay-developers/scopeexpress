@@ -450,20 +450,32 @@ const Library = () => {
               <p className="text-muted-foreground mt-2">
                 {language === 'hi' ? '🎯 आज ही अपनी seat book करें!' : '🎯 Book your seat today!'}
               </p>
-              {selectedCity && (
-                <div className="mt-3 inline-flex items-center gap-2 bg-primary/10 px-3 py-1.5 rounded-full">
-                  <MapPin className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-medium">{selectedCity.name}</span>
-                </div>
-              )}
-              {selectedLibrary && (
-                <div className="mt-2 text-sm text-muted-foreground">
-                  {selectedLibrary.name}
-                </div>
-              )}
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Pre-filled City & Library Name */}
+                {(selectedCity || selectedLibrary) && (
+                  <div className="space-y-3 p-4 bg-muted/50 rounded-xl border border-border">
+                    {selectedCity && (
+                      <div className="space-y-1">
+                        <Label className="text-xs text-muted-foreground">{language === 'hi' ? 'शहर' : 'City'}</Label>
+                        <div className="flex items-center gap-2 bg-background px-3 py-2.5 rounded-lg border">
+                          <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
+                          <span className="font-medium text-sm">{selectedCity.name}, {selectedCity.state}</span>
+                        </div>
+                      </div>
+                    )}
+                    {selectedLibrary && (
+                      <div className="space-y-1">
+                        <Label className="text-xs text-muted-foreground">{language === 'hi' ? 'लाइब्रेरी' : 'Library'}</Label>
+                        <div className="flex items-center gap-2 bg-background px-3 py-2.5 rounded-lg border">
+                          <Building2 className="h-4 w-4 text-primary flex-shrink-0" />
+                          <span className="font-medium text-sm">{selectedLibrary.name}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Label htmlFor="name">{t('common.name')} *</Label>
                   <Input
