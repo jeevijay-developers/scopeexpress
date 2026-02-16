@@ -110,9 +110,9 @@ const translations: Record<Language, Record<string, string>> = {
     // About Page
     'about.title': 'About Us',
     'about.story.title': 'Our Story',
-    'about.story.content': 'From Amarpatan to IIT Madras - our journey began with a dream to bring quality education to every student in our hometown. Now, we bring that same experience to help local students shape their future.',
+    'about.story.content': 'From Amarpatan to Global Experience - our journey began with a dream to bring quality education to every student in our society. Now, we bring that same experience to help local students shape their future.',
     'about.mission.title': 'Our Mission',
-    'about.mission.content': 'To provide accessible, quality educational support to students in Amarpatan and surrounding areas.',
+    'about.mission.content': 'To provide accessible, quality educational support to students in our society and surrounding areas.',
     
     // Contact Page
     'contact.title': 'Contact Us',
@@ -135,7 +135,7 @@ const translations: Record<Language, Record<string, string>> = {
     
     // Footer
     'footer.rights': 'All rights reserved.',
-    'footer.tagline': 'Empowering Students in Amarpatan',
+    'footer.tagline': 'Empowering Students',
   },
   hi: {
     // Navigation
@@ -238,9 +238,9 @@ const translations: Record<Language, Record<string, string>> = {
     // About Page
     'about.title': 'हमारे बारे में',
     'about.story.title': 'हमारी कहानी',
-    'about.story.content': 'अमरपाटन से IIT मद्रास तक - हमारी यात्रा एक सपने से शुरू हुई कि अपने गृहनगर के हर छात्र तक गुणवत्तापूर्ण शिक्षा पहुंचे। अब, हम उसी अनुभव को स्थानीय छात्रों के भविष्य को आकार देने में मदद करने के लिए लाते हैं।',
+    'about.story.content': 'अमरपाटन से वैश्विक अनुभव तक - हमारी यात्रा एक सपने से शुरू हुई कि अपने समाज के हर छात्र तक गुणवत्तापूर्ण शिक्षा पहुंचे। अब, हम उसी अनुभव को स्थानीय छात्रों के भविष्य को आकार देने में मदद करने के लिए लाते हैं।',
     'about.mission.title': 'हमारा मिशन',
-    'about.mission.content': 'अमरपाटन और आसपास के क्षेत्रों के छात्रों को सुलभ, गुणवत्तापूर्ण शैक्षिक सहायता प्रदान करना।',
+    'about.mission.content': 'हमारे समाज और आसपास के क्षेत्रों के छात्रों को सुलभ, गुणवत्तापूर्ण शैक्षिक सहायता प्रदान करना।',
     
     // Contact Page
     'contact.title': 'संपर्क करें',
@@ -263,7 +263,7 @@ const translations: Record<Language, Record<string, string>> = {
     
     // Footer
     'footer.rights': 'सर्वाधिकार सुरक्षित।',
-    'footer.tagline': 'अमरपाटन के छात्रों को सशक्त बनाना',
+    'footer.tagline': 'छात्रों को सशक्त बनाना',
   },
 };
 
