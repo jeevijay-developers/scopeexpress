@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { 
   LogOut, Users, Gamepad2, BarChart3, HelpCircle, 
   BookOpen, ShoppingBag, GraduationCap, Menu, X,
-  Home, Settings, ChevronRight, Sparkles, MessageSquare, Building2
+  Home, Settings, ChevronRight, Sparkles, MessageSquare, Building2, FileText
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -18,6 +18,7 @@ import AnalyticsDashboard from '@/components/admin/AnalyticsDashboard';
 import QuestionManager from '@/components/admin/QuestionManager';
 import LibraryManager from '@/components/admin/LibraryManager';
 import LibraryLocationsManager from '@/components/admin/LibraryLocationsManager';
+import MockTestManager from '@/components/admin/MockTestManager';
 
 interface Lead {
   id: string;
@@ -60,6 +61,7 @@ const menuItems = [
   { id: 'quizzes', label: 'Quiz Sessions', icon: Gamepad2 },
   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
   { id: 'questions', label: 'Question Bank', icon: HelpCircle },
+  { id: 'mocktests', label: 'Mock Tests', icon: FileText },
 ];
 
 const AdminDashboard = () => {
@@ -145,6 +147,8 @@ const AdminDashboard = () => {
         return <AnalyticsDashboard leads={leads} quizSessions={quizSessions} />;
       case 'questions':
         return <QuestionManager />;
+      case 'mocktests':
+        return <MockTestManager />;
       default:
         return <LeadsTable leads={leads} quizSessions={quizSessions} isLoading={isLoading} />;
     }

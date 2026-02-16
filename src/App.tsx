@@ -12,6 +12,7 @@ import Library from "./pages/Library";
 import Stationery from "./pages/Stationery";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import MockTest from "./pages/MockTest";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import NotFound from "./pages/NotFound";
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/practice" element={<Practice />} />
             <Route path="/career" element={<Career />} />
             <Route path="/library" element={<Library />} />
+            <Route path="/mock-test" element={<MockTest />} />
             <Route path="/stationery" element={<Stationery />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
