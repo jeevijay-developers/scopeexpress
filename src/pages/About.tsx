@@ -205,8 +205,8 @@ const About = () => {
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
                       {language === 'hi' 
-                        ? 'जब मेदिनी कुमार जी IIT से लौटे, उन्होंने देखा कि उनके समाज के छात्रों को सही मार्गदर्शन नहीं मिल रहा। इसी सोच से Scope Express का जन्म हुआ।'
-                        : 'When Medinee Kumar returned from IIT, he observed that students of his society lacked proper guidance. This thought gave birth to Scope Express.'}
+                        ? 'मेदिनी कुमार जी ने देखा कि उनके समाज के छात्रों को सही मार्गदर्शन नहीं मिल रहा। इसी सोच से Scope Express का जन्म हुआ।'
+                        : 'Medinee Kumar observed that students of his society lacked proper guidance. This thought gave birth to Scope Express.'}
                     </p>
                   </div>
                 </CardContent>
