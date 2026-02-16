@@ -13,6 +13,7 @@ export const Navbar = () => {
   const navLinks = [
     { path: '/', label: t('nav.home') },
     { path: '/practice', label: t('nav.practice') },
+    { path: '/mock-test', label: t('nav.mocktest') },
     { path: '/career', label: t('nav.career') },
     { path: '/library', label: t('nav.library') },
     { path: '/stationery', label: t('nav.stationery') },
