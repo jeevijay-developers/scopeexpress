@@ -29,7 +29,7 @@ const About = () => {
 
   const timeline = [
     { year: '2019', title: language === 'hi' ? 'शुरुआत' : 'The Beginning', desc: language === 'hi' ? 'छोटे कमरे में 10 छात्रों के साथ शुरुआत' : 'Started with 10 students in a small room' },
-    { year: '2020', title: language === 'hi' ? 'लाइब्रेरी स्थापना' : 'Library Established', desc: language === 'hi' ? 'अमरपाटन में पहली प्रोफेशनल लाइब्रेरी' : 'First professional library in Amarpatan' },
+    { year: '2020', title: language === 'hi' ? 'लाइब्रेरी स्थापना' : 'Library Established', desc: language === 'hi' ? 'पहली प्रोफेशनल लाइब्रेरी की स्थापना' : 'First professional library established' },
     { year: '2022', title: language === 'hi' ? 'कैरियर गाइडेंस' : 'Career Guidance', desc: language === 'hi' ? 'व्यक्तिगत कैरियर काउंसलिंग शुरू' : 'Started personalized career counseling' },
     { year: '2024', title: language === 'hi' ? 'डिजिटल विस्तार' : 'Digital Expansion', desc: language === 'hi' ? 'ऑनलाइन प्रैक्टिस और क्विज़ लॉन्च' : 'Launched online practice & quizzes' },
   ];
@@ -55,7 +55,7 @@ const About = () => {
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6 animate-fade-in">
               <Sparkles className="h-4 w-4" />
               <span className="text-sm font-bold">
-                {language === 'hi' ? '🏆 अमरपाटन का #1 शैक्षिक केंद्र' : '🏆 #1 Education Hub in Amarpatan'}
+                {language === 'hi' ? '🏆 #1 शैक्षिक केंद्र' : '🏆 #1 Education Hub'}
               </span>
             </div>
             
@@ -138,7 +138,7 @@ const About = () => {
                       </p>
                       <p className="leading-relaxed">
                         {language === 'hi' 
-                          ? 'अपने वैश्विक अनुभव और ज्ञान को अमरपाटन के छात्रों के साथ साझा करने के लिए, उन्होंने Scope Express की स्थापना की। आज, वे सैकड़ों छात्रों को उनके शैक्षिक और करियर लक्ष्यों तक पहुँचने में मदद कर रहे हैं।'
+                          ? 'अपने वैश्विक अनुभव और ज्ञान को अपने समाज के छात्रों के साथ साझा करने के लिए, उन्होंने Scope Express की स्थापना की। आज, वे सैकड़ों छात्रों को उनके शैक्षिक और करियर लक्ष्यों तक पहुँचने में मदद कर रहे हैं।'
                           : 'To share his global experience and knowledge with students of his society, he founded Scope Express. Today, he helps hundreds of students reach their academic and career goals.'}
                       </p>
                     </div>
@@ -172,8 +172,8 @@ const About = () => {
             <Quote className="h-12 w-12 mx-auto mb-6 opacity-50" />
             <blockquote className="text-xl md:text-2xl italic mb-6 leading-relaxed">
               {language === 'hi' 
-                ? '"एक छोटे से गाँव से IIT JEE 2006 qualify करके Marine Engineer बना और दुनिया के कई देशों में काम किया। अब मैं उसी अनुभव से अमरपाटन के छात्रों को उनके सपने पूरे करने में मदद कर रहा हूं।"'
-                : '"From a small village, I qualified IIT JEE in 2006, became a Marine Engineer, and worked across many countries worldwide. Now I use that experience to help students in Amarpatan achieve their dreams."'}
+                ? '"एक छोटे से गाँव से IIT JEE 2006 qualify करके Marine Engineer बना और दुनिया के कई देशों में काम किया। अब मैं उसी अनुभव से अपने समाज के छात्रों को उनके सपने पूरे करने में मदद कर रहा हूं।"'
+                : '"From a small village, I qualified IIT JEE in 2006, became a Marine Engineer, and worked across many countries worldwide. Now I use that experience to help students of my society achieve their dreams."'}
             </blockquote>
             <div className="flex items-center justify-center gap-3">
               <img src={medineeKumar} alt="Medinee Kumar" className="w-12 h-12 rounded-full object-cover border-2 border-white/50" />
@@ -205,8 +205,8 @@ const About = () => {
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
                       {language === 'hi' 
-                        ? 'जब मेदिनी कुमार जी IIT से लौटे, उन्होंने देखा कि अमरपाटन के छात्रों को सही मार्गदर्शन नहीं मिल रहा। इसी सोच से Scope Express का जन्म हुआ।'
-                        : 'When Medinee Kumar returned from IIT, he observed that students in Amarpatan lacked proper guidance. This thought gave birth to Scope Express.'}
+                        ? 'जब मेदिनी कुमार जी IIT से लौटे, उन्होंने देखा कि उनके समाज के छात्रों को सही मार्गदर्शन नहीं मिल रहा। इसी सोच से Scope Express का जन्म हुआ।'
+                        : 'When Medinee Kumar returned from IIT, he observed that students of his society lacked proper guidance. This thought gave birth to Scope Express.'}
                     </p>
                   </div>
                 </CardContent>

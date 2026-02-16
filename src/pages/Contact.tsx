@@ -197,7 +197,7 @@ const Contact = () => {
                 className="rounded-3xl shadow-2xl"
               />
               <div className="absolute -top-4 -right-4 bg-primary text-primary-foreground px-4 py-2 rounded-2xl shadow-lg animate-bounce-slow">
-                <p className="font-bold">📍 Amarpatan</p>
+                <p className="font-bold">📍 Scope Express</p>
               </div>
               <div className="absolute -bottom-4 -left-4 bg-warning text-warning-foreground px-4 py-2 rounded-2xl shadow-lg animate-float">
                 <p className="font-bold">⏰ 6AM - 10PM</p>

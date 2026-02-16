@@ -128,7 +128,7 @@ const Index = () => {
               <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-6 animate-fade-in">
                 <Sparkles className="h-4 w-4" />
                 <span className="text-sm font-medium">
-                  {language === 'hi' ? 'अमरपाटन का #1 स्टूडेंट हब' : '#1 Student Hub in Amarpatan'}
+                  {language === 'hi' ? '#1 स्टूडेंट हब' : '#1 Student Hub'}
                 </span>
               </div>
               
@@ -414,8 +414,8 @@ const Index = () => {
               
               <p className="text-muted-foreground mb-6 leading-relaxed">
                 {language === 'hi' 
-                  ? 'एक छोटे से गाँव से 2006 में IIT JEE qualify करके Marine Engineer बने। चीन, जापान, कोरिया, अमेरिका, यूरोप, जर्मनी, कनाडा, ब्राज़ील, सऊदी अरब और सभी समुद्री देशों में काम करने का वैश्विक अनुभव। अब वही अनुभव अमरपाटन के छात्रों के लिए उपलब्ध है।'
-                  : 'From a small village, qualified IIT JEE in 2006 and became a Marine Engineer. Global working experience in China, Japan, Korea, USA, Europe, Germany, Canada, Brazil, Saudi Arabia, and all maritime countries. Now that same experience is available for students in Amarpatan.'}
+                  ? 'एक छोटे से गाँव से 2006 में IIT JEE qualify करके Marine Engineer बने। चीन, जापान, कोरिया, अमेरिका, यूरोप, जर्मनी, कनाडा, ब्राज़ील, सऊदी अरब और सभी समुद्री देशों में काम करने का वैश्विक अनुभव। अब वही अनुभव उनके समाज के छात्रों के लिए उपलब्ध है।'
+                  : 'From a small village, qualified IIT JEE in 2006 and became a Marine Engineer. Global working experience in China, Japan, Korea, USA, Europe, Germany, Canada, Brazil, Saudi Arabia, and all maritime countries. Now that same experience is available for students of his society.'}
               </p>
               
               <div className="grid grid-cols-2 gap-4 mb-6">
@@ -840,8 +840,8 @@ const Index = () => {
             </h2>
             <p className="text-background/80 mb-8 text-lg">
               {language === 'hi' 
-                ? 'Scope Express के साथ जुड़ें और अपने सपनों को हकीकत बनाएं। अमरपाटन के सैकड़ों छात्र पहले से ही सफलता की राह पर हैं!'
-                : 'Join Scope Express and turn your dreams into reality. Hundreds of students in Amarpatan are already on their path to success!'}
+                ? 'Scope Express के साथ जुड़ें और अपने सपनों को हकीकत बनाएं। सैकड़ों छात्र पहले से ही सफलता की राह पर हैं!'
+                : 'Join Scope Express and turn your dreams into reality. Hundreds of students are already on their path to success!'}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg" variant="secondary" className="text-lg">

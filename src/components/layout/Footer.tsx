@@ -26,8 +26,8 @@ export const Footer = () => {
             <img src={logo} alt="Scope Express" className="h-14 w-auto" />
             <p className="text-background/70 text-sm leading-relaxed">
               {language === 'hi' 
-                ? 'अमरपाटन का प्रमुख educational hub। Library, Career Guidance, और Free Practice - सब एक जगह।'
-                : 'Amarpatan\'s premier educational hub. Library, Career Guidance, and Free Practice - all in one place.'}
+                ? 'प्रमुख educational hub। Library, Career Guidance, और Free Practice - सब एक जगह।'
+                : 'Your premier educational hub. Library, Career Guidance, and Free Practice - all in one place.'}
             </p>
             <div className="flex gap-3">
               <a href="#" className="p-2.5 rounded-full bg-background/10 hover:bg-primary hover:text-primary-foreground transition-colors">
@@ -142,7 +142,7 @@ export const Footer = () => {
             <p className="text-background/60 text-sm flex items-center gap-1">
               © {currentYear} Scope Express. {t('footer.rights')} 
               <Heart className="h-3 w-3 text-accent fill-accent inline mx-1" />
-              {language === 'hi' ? 'अमरपाटन से बनाया गया' : 'Made in Amarpatan'}
+              {language === 'hi' ? 'प्यार से बनाया गया' : 'Made with love'}
             </p>
             <p className="text-background/60 text-sm">
               {language === 'hi' 

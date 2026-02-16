@@ -193,7 +193,7 @@ const Library = () => {
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6 animate-fade-in">
               <Crown className="h-4 w-4 text-warning" />
               <span className="text-sm font-bold">
-                {language === 'hi' ? '🏆 अमरपाटन की #1 Library' : '🏆 #1 Library in Amarpatan'}
+                {language === 'hi' ? '🏆 #1 Library' : '🏆 #1 Library'}
               </span>
             </div>
             
