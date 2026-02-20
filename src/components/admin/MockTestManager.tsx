@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Trash2, Edit, Eye } from 'lucide-react';
+import { Plus, Trash2, Edit, Upload, Download } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -26,7 +26,8 @@ const MockTestManager = () => {
   const [selectedTestId, setSelectedTestId] = useState('');
   const [questions, setQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-
+  const [csvUploading, setCsvUploading] = useState(false);
+  const csvInputRef = useRef<HTMLInputElement>(null);
   // Form states
   const [examName, setExamName] = useState('');
   const [testName, setTestName] = useState('');
@@ -110,6 +111,78 @@ const MockTestManager = () => {
     fetchQuestions(selectedTestId);
   };
 
+  const downloadCsvTemplate = () => {
+    const header = 'question_number,question,option_a,option_b,option_c,option_d,correct_answer';
+    const sample1 = '1,What is the capital of India?,Mumbai,Delhi,Kolkata,Chennai,B';
+    const sample2 = '2,Who wrote the Indian National Anthem?,Rabindranath Tagore,Mahatma Gandhi,Jawaharlal Nehru,Sardar Patel,A';
+    const csv = [header, sample1, sample2].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'mock_test_questions_template.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleCsvUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !selectedTestId) return;
+    
+    setCsvUploading(true);
+    try {
+      const text = await file.text();
+      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+      
+      if (lines.length < 2) { toast.error('CSV file is empty or has no data rows'); return; }
+      
+      const header = lines[0].toLowerCase();
+      if (!header.includes('question') || !header.includes('correct_answer')) {
+        toast.error('Invalid CSV format. Please use the provided template.');
+        return;
+      }
+
+      const answerMap: Record<string, number> = { 'A': 0, 'B': 1, 'C': 2, 'D': 3, '0': 0, '1': 1, '2': 2, '3': 3 };
+      const questionsToInsert: any[] = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        // Parse CSV respecting quoted fields
+        const cols = lines[i].match(/(".*?"|[^,]+)/g)?.map(c => c.replace(/^"|"$/g, '').trim()) || [];
+        if (cols.length < 7) continue;
+
+        const [qNum, question, optA, optB, optC, optD, correct] = cols;
+        const correctIdx = answerMap[correct.toUpperCase()];
+        
+        if (correctIdx === undefined || !question) continue;
+
+        questionsToInsert.push({
+          mock_test_id: selectedTestId,
+          question_number: parseInt(qNum) || (i),
+          question,
+          options: [optA, optB, optC, optD],
+          correct_answer: correctIdx,
+        });
+      }
+
+      if (questionsToInsert.length === 0) { toast.error('No valid questions found in CSV'); return; }
+
+      // Insert in batches of 50
+      for (let i = 0; i < questionsToInsert.length; i += 50) {
+        const batch = questionsToInsert.slice(i, i + 50);
+        const { error } = await supabase.from('mock_test_questions').insert(batch);
+        if (error) throw error;
+      }
+
+      toast.success(`${questionsToInsert.length} questions uploaded successfully!`);
+      fetchQuestions(selectedTestId);
+    } catch (err: any) {
+      toast.error('Upload failed: ' + (err.message || 'Unknown error'));
+    } finally {
+      setCsvUploading(false);
+      if (csvInputRef.current) csvInputRef.current.value = '';
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Tabs value={tab} onValueChange={setTab}>
@@ -179,6 +252,33 @@ const MockTestManager = () => {
 
           {selectedTestId && (
             <>
+              {/* CSV Bulk Upload */}
+              <Card className="p-4 space-y-3 border-dashed border-2">
+                <h3 className="font-semibold flex items-center gap-2"><Upload className="h-4 w-4" /> Bulk Upload via CSV</h3>
+                <p className="text-sm text-muted-foreground">
+                  Upload a CSV file with columns: <code className="bg-muted px-1 rounded text-xs">question_number, question, option_a, option_b, option_c, option_d, correct_answer</code>. 
+                  Correct answer should be A, B, C, or D.
+                </p>
+                <div className="flex gap-3 flex-wrap">
+                  <Button variant="outline" size="sm" onClick={downloadCsvTemplate}>
+                    <Download className="h-4 w-4 mr-1" /> Download Template
+                  </Button>
+                  <div>
+                    <input
+                      ref={csvInputRef}
+                      type="file"
+                      accept=".csv"
+                      onChange={handleCsvUpload}
+                      className="hidden"
+                      id="csv-upload"
+                    />
+                    <Button size="sm" disabled={csvUploading} onClick={() => csvInputRef.current?.click()}>
+                      <Upload className="h-4 w-4 mr-1" /> {csvUploading ? 'Uploading...' : 'Upload CSV'}
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+
               <Card className="p-4 space-y-3">
                 <h3 className="font-semibold">Add Question</h3>
                 <div><Label>Question #{qNumber}</Label><Textarea value={qText} onChange={e => setQText(e.target.value)} placeholder="Enter question" /></div>
