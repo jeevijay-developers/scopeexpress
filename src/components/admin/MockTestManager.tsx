@@ -114,9 +114,11 @@ const MockTestManager = () => {
   const downloadCsvTemplate = () => {
     const header = 'question_number,question,option_a,option_b,option_c,option_d,correct_answer';
     const sample1 = '1,What is the capital of India?,Mumbai,Delhi,Kolkata,Chennai,B';
-    const sample2 = '2,Who wrote the Indian National Anthem?,Rabindranath Tagore,Mahatma Gandhi,Jawaharlal Nehru,Sardar Patel,A';
+    const sample2 = '2,"भारत का राष्ट्रीय पक्षी कौन सा है?","मोर","तोता","कबूतर","बाज",A';
     const csv = [header, sample1, sample2].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
+    // Add UTF-8 BOM so Excel opens Hindi text correctly
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -131,7 +133,12 @@ const MockTestManager = () => {
     
     setCsvUploading(true);
     try {
-      const text = await file.text();
+      // Read file as UTF-8 explicitly to preserve Hindi/Unicode text
+      const buffer = await file.arrayBuffer();
+      const decoder = new TextDecoder('utf-8');
+      let text = decoder.decode(buffer);
+      // Strip BOM if present
+      if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
       const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
       
       if (lines.length < 2) { toast.error('CSV file is empty or has no data rows'); return; }
