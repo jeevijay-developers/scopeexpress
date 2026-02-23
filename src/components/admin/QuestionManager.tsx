@@ -215,7 +215,9 @@ const QuestionManager = () => {
       ...sampleRows.map(row => row.map(cell => `"${cell}"`).join(','))
     ].join('\n');
     
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    // Add UTF-8 BOM so Excel opens Hindi text correctly
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = 'sample_questions.csv';
@@ -280,7 +282,12 @@ const QuestionManager = () => {
     setUploadResults(null);
 
     try {
-      const text = await file.text();
+      // Read file as UTF-8 explicitly to preserve Hindi/Unicode text
+      const buffer = await file.arrayBuffer();
+      const decoder = new TextDecoder('utf-8');
+      let text = decoder.decode(buffer);
+      // Strip BOM if present
+      if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
       const rows = parseCSV(text);
       
       if (rows.length < 2) {
