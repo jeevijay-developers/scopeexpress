@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Clock, Flag, ChevronLeft, ChevronRight, CheckCircle2, XCircle, RotateCcw } from 'lucide-react';
+import { Clock, Flag, ChevronLeft, ChevronRight, CheckCircle2, XCircle, RotateCcw, Languages } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -33,6 +33,8 @@ const MockTestPlayer = ({ testId, testName, durationMinutes, totalQuestions, ses
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [hindiTranslations, setHindiTranslations] = useState<Record<number, { question: string; options: string[] }>>({});
+  const [translating, setTranslating] = useState(false);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -42,15 +44,55 @@ const MockTestPlayer = ({ testId, testName, durationMinutes, totalQuestions, ses
         .eq('mock_test_id', testId)
         .order('question_number');
       if (data) {
-        setQuestions(data.map(q => ({
+        const parsed = data.map(q => ({
           ...q,
           options: Array.isArray(q.options) ? q.options as string[] : [],
-        })));
+        }));
+        setQuestions(parsed);
+        // Fetch Hindi translations
+        fetchTranslations(parsed);
       }
       setLoading(false);
     };
     fetchQuestions();
   }, [testId]);
+
+  const fetchTranslations = async (qs: Question[]) => {
+    setTranslating(true);
+    try {
+      // Collect all texts: questions + options
+      const allTexts: string[] = [];
+      qs.forEach(q => {
+        allTexts.push(q.question);
+        allTexts.push(...q.options);
+      });
+
+      const { data, error } = await supabase.functions.invoke('translate-questions', {
+        body: { texts: allTexts },
+      });
+
+      if (error || !data?.translations) {
+        console.error('Translation error:', error);
+        return;
+      }
+
+      const translations = data.translations as string[];
+      const result: Record<number, { question: string; options: string[] }> = {};
+      let idx = 0;
+      qs.forEach((q, i) => {
+        const translatedQuestion = translations[idx] || q.question;
+        idx++;
+        const translatedOptions = q.options.map((_, j) => translations[idx + j] || q.options[j]);
+        idx += q.options.length;
+        result[i] = { question: translatedQuestion, options: translatedOptions };
+      });
+      setHindiTranslations(result);
+    } catch (e) {
+      console.error('Failed to fetch translations:', e);
+    } finally {
+      setTranslating(false);
+    }
+  };
 
   const submitTest = useCallback(async () => {
     if (submitted) return;
@@ -158,25 +200,45 @@ const MockTestPlayer = ({ testId, testName, durationMinutes, totalQuestions, ses
             </Button>
           </div>
 
-          <p className="text-lg font-medium leading-relaxed">{currentQ.question}</p>
+          <div className="space-y-1">
+            <p className="text-lg font-medium leading-relaxed">{currentQ.question}</p>
+            {hindiTranslations[currentIndex] && hindiTranslations[currentIndex].question !== currentQ.question && (
+              <p className="text-base text-muted-foreground leading-relaxed italic">
+                <span className="text-xs font-semibold text-primary mr-1">या (Hindi):</span>
+                {hindiTranslations[currentIndex].question}
+              </p>
+            )}
+            {translating && !hindiTranslations[currentIndex] && (
+              <p className="text-sm text-muted-foreground animate-pulse flex items-center gap-1">
+                <Languages className="h-3 w-3" /> Translating to Hindi...
+              </p>
+            )}
+          </div>
 
           <div className="space-y-3">
-            {currentQ.options.map((opt, i) => (
-              <button
-                key={i}
-                onClick={() => setAnswers(prev => ({ ...prev, [currentIndex]: i }))}
-                className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
-                  answers[currentIndex] === i
-                    ? 'border-primary bg-primary/10 font-medium'
-                    : 'border-border hover:border-primary/50 hover:bg-muted'
-                }`}
-              >
-                <span className="inline-flex items-center justify-center w-7 h-7 rounded-full border mr-3 text-sm font-medium">
-                  {String.fromCharCode(65 + i)}
-                </span>
-                {opt}
-              </button>
-            ))}
+            {currentQ.options.map((opt, i) => {
+              const hindiOpt = hindiTranslations[currentIndex]?.options?.[i];
+              const showHindi = hindiOpt && hindiOpt !== opt;
+              return (
+                <button
+                  key={i}
+                  onClick={() => setAnswers(prev => ({ ...prev, [currentIndex]: i }))}
+                  className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
+                    answers[currentIndex] === i
+                      ? 'border-primary bg-primary/10 font-medium'
+                      : 'border-border hover:border-primary/50 hover:bg-muted'
+                  }`}
+                >
+                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full border mr-3 text-sm font-medium">
+                    {String.fromCharCode(65 + i)}
+                  </span>
+                  {opt}
+                  {showHindi && (
+                    <span className="text-muted-foreground italic ml-1">/ {hindiOpt}</span>
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           <div className="flex items-center justify-between pt-4">
