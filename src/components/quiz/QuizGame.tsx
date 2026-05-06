@@ -20,7 +20,6 @@ interface Question {
   id: string;
   question: string;
   options: string[];
-  correctAnswer: number;
 }
 
 const getLevelFromScore = (score: number): { name: string; nameHi: string; color: string; bg: string } => {
@@ -63,6 +62,7 @@ export const QuizGame = ({ topic, classLevel, studentName, leadId, onEnd }: Quiz
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(30);
   const [comboMultiplier, setComboMultiplier] = useState(1);
+  const [lastCorrectIndex, setLastCorrectIndex] = useState<number | null>(null);
 
   // Timer effect
   useEffect(() => {
@@ -96,7 +96,7 @@ export const QuizGame = ({ topic, classLevel, studentName, leadId, onEnd }: Quiz
       try {
         const { data, error } = await supabase
           .from('quiz_questions')
-          .select('id, question, options, correct_answer')
+          .select('id, question, options')
           .eq('topic', topic)
           .eq('class_level', classLevel)
           .eq('language', language)
@@ -110,7 +110,6 @@ export const QuizGame = ({ topic, classLevel, studentName, leadId, onEnd }: Quiz
             id: q.id,
             question: q.question,
             options: q.options as string[],
-            correctAnswer: q.correct_answer
           })));
         }
       } catch (err) {
@@ -156,14 +155,16 @@ export const QuizGame = ({ topic, classLevel, studentName, leadId, onEnd }: Quiz
   const updateSession = useCallback(async (finalScore: number, finalCorrect: number, finalLevel: string) => {
     if (!sessionId) return;
     try {
-      await supabase.from('quiz_sessions').update({
-        completed: true,
-        completed_at: new Date().toISOString(),
-        score: finalScore,
-        correct_answers: finalCorrect,
-        questions_attempted: questions.length,
-        level: finalLevel
-      }).eq('id', sessionId);
+      await supabase.functions.invoke('update-quiz-session', {
+        body: {
+          session_id: sessionId,
+          completed: true,
+          score: finalScore,
+          correct_answers: finalCorrect,
+          questions_attempted: questions.length,
+          level: finalLevel,
+        },
+      });
     } catch (error) {
       console.error('Error updating session:', error);
     }
@@ -171,6 +172,7 @@ export const QuizGame = ({ topic, classLevel, studentName, leadId, onEnd }: Quiz
 
   const moveToNextQuestion = () => {
     setTimeLeft(30);
+    setLastCorrectIndex(null);
     if (lives <= 0) {
       const finalLevel = getLevelFromScore(score);
       setIsComplete(true);
@@ -186,14 +188,23 @@ export const QuizGame = ({ topic, classLevel, studentName, leadId, onEnd }: Quiz
     }
   };
 
-  const handleAnswerSelect = (index: number) => {
+  const handleAnswerSelect = async (index: number) => {
     if (selectedAnswer !== null) return;
     
     playClick();
     setSelectedAnswer(index);
     setShowResult(true);
 
-    const isCorrect = index === currentQuestion.correctAnswer;
+    let isCorrect = false;
+    try {
+      const { data } = await supabase.functions.invoke('check-quiz-answer', {
+        body: { question_id: currentQuestion.id, selected_answer: index },
+      });
+      isCorrect = !!data?.correct;
+    } catch (e) {
+      console.error('Answer check failed:', e);
+    }
+    setLastCorrectIndex(isCorrect ? index : -1);
     
     if (isCorrect) {
       playCorrect();
