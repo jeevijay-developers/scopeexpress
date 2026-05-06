@@ -1,0 +1,1 @@
+GRANT SELECT (correct_answer) ON public.quiz_questions TO authenticated;
