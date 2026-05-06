@@ -12,9 +12,47 @@ serve(async (req) => {
   }
 
   try {
+    // AuthN/AuthZ: require admin user
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const token = authHeader.replace("Bearer ", "");
+    const authClient = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: authHeader } } },
+    );
+    const { data: claimsData, error: claimsErr } = await authClient.auth.getClaims(token);
+    if (claimsErr || !claimsData?.claims?.sub) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const adminCheckClient = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+    const { data: adminRow } = await adminCheckClient
+      .from("admin_users")
+      .select("id")
+      .eq("user_id", claimsData.claims.sub)
+      .maybeSingle();
+    if (!adminRow) {
+      return new Response(JSON.stringify({ error: "Forbidden - Admin only" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { topic, classLevel, language, count } = await req.json();
+    const safeCount = Math.max(1, Math.min(50, Number(count) || 10));
     
-    console.log(`Generating ${count} questions for topic: ${topic}, class: ${classLevel}, language: ${language}`);
+    console.log(`Generating ${safeCount} questions for topic: ${topic}, class: ${classLevel}, language: ${language}`);
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -40,7 +78,7 @@ Questions should be age-appropriate for Class ${classLevel} students (ages ${par
 Each question must have exactly 4 options with only one correct answer.
 Make questions engaging, educational, and progressively challenging.`;
 
-    const userPrompt = `Generate exactly ${count} multiple choice questions on the topic of ${topicNames[topic] || topic} for Class ${classLevel} students.
+    const userPrompt = `Generate exactly ${safeCount} multiple choice questions on the topic of ${topicNames[topic] || topic} for Class ${classLevel} students.
 
 Return the questions in this exact JSON format:
 {

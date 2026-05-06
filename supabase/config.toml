@@ -1,7 +1,13 @@
 project_id = "aoxzoymzaorwwnrgjbrw"
 
 [functions.generate-quiz]
-verify_jwt = false
+verify_jwt = true
 
 [functions.generate-mock-questions]
+verify_jwt = false
+
+[functions.check-quiz-answer]
+verify_jwt = false
+
+[functions.update-quiz-session]
 verify_jwt = false
