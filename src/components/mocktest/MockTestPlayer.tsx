@@ -11,7 +11,6 @@ interface Question {
   id: string;
   question: string;
   options: string[];
-  correct_answer: number;
   question_number: number;
 }
 
@@ -40,7 +39,7 @@ const MockTestPlayer = ({ testId, testName, durationMinutes, totalQuestions, ses
     const fetchQuestions = async () => {
       const { data } = await supabase
         .from('mock_test_questions')
-        .select('*')
+        .select('id, question, options, question_number, mock_test_id, created_at')
         .eq('mock_test_id', testId)
         .order('question_number');
       if (data) {
@@ -96,23 +95,19 @@ const MockTestPlayer = ({ testId, testName, durationMinutes, totalQuestions, ses
 
   const submitTest = useCallback(async () => {
     if (submitted) return;
-    let correct = 0;
-    questions.forEach((q, i) => {
-      if (answers[i] === q.correct_answer) correct++;
-    });
-    const totalAttempted = Object.keys(answers).length;
-    setScore(correct);
     setSubmitted(true);
 
-    await supabase.from('mock_test_sessions').update({
-      answers,
-      score: correct,
-      total_attempted: totalAttempted,
-      completed: true,
-      completed_at: new Date().toISOString(),
-    }).eq('id', sessionId);
-
-    toast.success('Test submitted!');
+    try {
+      const { data, error } = await supabase.functions.invoke('submit-mock-test', {
+        body: { session_id: sessionId, answers },
+      });
+      if (error) throw error;
+      setScore(data?.score ?? 0);
+      toast.success('Test submitted!');
+    } catch (e) {
+      console.error('Submit failed:', e);
+      toast.error('Failed to submit test');
+    }
   }, [submitted, questions, answers, sessionId]);
 
   useEffect(() => {

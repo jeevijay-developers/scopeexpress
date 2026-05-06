@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.update-quiz-session]
 verify_jwt = false
+
+[functions.submit-mock-test]
+verify_jwt = false
