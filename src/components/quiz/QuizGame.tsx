@@ -464,9 +464,9 @@ export const QuizGame = ({ topic, classLevel, studentName, leadId, onEnd }: Quiz
                 let optionClass = 'border-2 border-slate-600 bg-slate-700/50 hover:border-purple-400 hover:bg-purple-500/10 text-white';
                 
                 if (showResult) {
-                  if (index === currentQuestion.correctAnswer) {
+                  if (index === lastCorrectIndex) {
                     optionClass = 'border-2 border-green-400 bg-green-500/20 text-green-300 scale-105';
-                  } else if (index === selectedAnswer && index !== currentQuestion.correctAnswer) {
+                  } else if (index === selectedAnswer && index !== lastCorrectIndex) {
                     optionClass = 'border-2 border-red-400 bg-red-500/20 text-red-300 animate-shake';
                   } else {
                     optionClass = 'border-2 border-slate-700 bg-slate-800/50 text-slate-500';
@@ -496,18 +496,18 @@ export const QuizGame = ({ topic, classLevel, studentName, leadId, onEnd }: Quiz
         {/* Result Feedback */}
         {showResult && (
           <div className={`text-center p-4 rounded-xl animate-scale-in ${
-            selectedAnswer === currentQuestion.correctAnswer 
+            selectedAnswer === lastCorrectIndex
               ? 'bg-green-500/20 border border-green-500/50' 
               : 'bg-red-500/20 border border-red-500/50'
           }`}>
             <p className={`text-2xl font-bold ${
-              selectedAnswer === currentQuestion.correctAnswer ? 'text-green-400' : 'text-red-400'
+              selectedAnswer === lastCorrectIndex ? 'text-green-400' : 'text-red-400'
             }`}>
-              {selectedAnswer === currentQuestion.correctAnswer 
+              {selectedAnswer === lastCorrectIndex
                 ? (language === 'hi' ? '✅ सही जवाब!' : '✅ Correct!') 
                 : (language === 'hi' ? '❌ गलत!' : '❌ Wrong!')}
             </p>
-            {selectedAnswer === currentQuestion.correctAnswer && (
+            {selectedAnswer === lastCorrectIndex && (
               <p className="text-green-300 mt-1">
                 +{(10 + Math.floor(timeLeft / 3)) * comboMultiplier} {language === 'hi' ? 'पॉइंट्स' : 'points'}
               </p>
