@@ -12,17 +12,12 @@ import { Plus, Trash2, Edit, Upload, Download } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-const examNames = [
-  'SSC CGL', 'SSC CHSL', 'SSC MTS', 'SSC GD Constable',
-  'Army GD', 'Army Clerk', 'Navy AA/SSR', 'Air Force X/Y Group',
-  'MPPSC', 'UPPSC', 'Railway Group D', 'Railway NTPC',
-  'Patwari', 'Police Constable', 'Bank PO/Clerk', 'CTET/TET',
-];
-
 const MockTestManager = () => {
   const [tab, setTab] = useState('tests');
   const [tests, setTests] = useState<any[]>([]);
   const [sessions, setSessions] = useState<any[]>([]);
+  const [exams, setExams] = useState<any[]>([]);
+  const [newExamName, setNewExamName] = useState('');
   const [selectedTestId, setSelectedTestId] = useState('');
   const [questions, setQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -43,6 +38,7 @@ const MockTestManager = () => {
   useEffect(() => {
     fetchTests();
     fetchSessions();
+    fetchExams();
   }, []);
 
   useEffect(() => {
@@ -57,6 +53,25 @@ const MockTestManager = () => {
   const fetchSessions = async () => {
     const { data } = await supabase.from('mock_test_sessions').select('*').order('created_at', { ascending: false });
     setSessions(data || []);
+  };
+
+  const fetchExams = async () => {
+    const { data } = await supabase.from('exams').select('*').order('name');
+    setExams(data || []);
+  };
+
+  const addExam = async () => {
+    const name = newExamName.trim();
+    if (!name) { toast.error('Enter exam name'); return; }
+    const { error } = await supabase.from('exams').insert({ name });
+    if (error) toast.error(error.message.includes('duplicate') ? 'Exam already exists' : 'Failed to add exam');
+    else { toast.success('Exam added!'); setNewExamName(''); fetchExams(); }
+  };
+
+  const deleteExam = async (id: string) => {
+    const { error } = await supabase.from('exams').delete().eq('id', id);
+    if (error) toast.error('Failed to delete');
+    else { toast.success('Deleted'); fetchExams(); }
   };
 
   const fetchQuestions = async (testId: string) => {
@@ -195,6 +210,7 @@ const MockTestManager = () => {
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList>
           <TabsTrigger value="tests">Manage Tests</TabsTrigger>
+          <TabsTrigger value="exams">Exams</TabsTrigger>
           <TabsTrigger value="questions">Questions</TabsTrigger>
           <TabsTrigger value="results">Results</TabsTrigger>
         </TabsList>
@@ -207,7 +223,7 @@ const MockTestManager = () => {
                 <Label>Exam</Label>
                 <Select value={examName} onValueChange={setExamName}>
                   <SelectTrigger><SelectValue placeholder="Select Exam" /></SelectTrigger>
-                  <SelectContent>{examNames.map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}</SelectContent>
+                  <SelectContent>{exams.map(e => <SelectItem key={e.id} value={e.name}>{e.name}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div><Label>Test Name</Label><Input value={testName} onChange={e => setTestName(e.target.value)} placeholder="Mock Test 1" /></div>
@@ -239,6 +255,45 @@ const MockTestManager = () => {
                       <Edit className="h-3 w-3 mr-1" /> Questions
                     </Button>
                     <Button size="sm" variant="destructive" onClick={() => deleteTest(t.id)}>
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TabsContent>
+
+        <TabsContent value="exams" className="space-y-4">
+          <Card className="p-4 space-y-3">
+            <h3 className="font-semibold">Add New Exam</h3>
+            <div className="flex gap-2">
+              <Input
+                value={newExamName}
+                onChange={e => setNewExamName(e.target.value)}
+                placeholder="e.g. UPSC CSE"
+                onKeyDown={e => { if (e.key === 'Enter') addExam(); }}
+              />
+              <Button onClick={addExam}><Plus className="h-4 w-4 mr-1" /> Add</Button>
+            </div>
+            <p className="text-xs text-muted-foreground">Newly added exams appear in the "Exam" dropdown when creating mock tests.</p>
+          </Card>
+
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Exam Name</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {exams.map(e => (
+                <TableRow key={e.id}>
+                  <TableCell>{e.name}</TableCell>
+                  <TableCell><Badge variant={e.is_active ? 'default' : 'secondary'}>{e.is_active ? 'Active' : 'Inactive'}</Badge></TableCell>
+                  <TableCell>
+                    <Button size="sm" variant="destructive" onClick={() => deleteExam(e.id)}>
                       <Trash2 className="h-3 w-3" />
                     </Button>
                   </TableCell>
