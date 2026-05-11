@@ -35,6 +35,36 @@ export type Database = {
         }
         Relationships: []
       }
+      consultancy_submissions: {
+        Row: {
+          category: string
+          created_at: string
+          data: Json
+          email: string | null
+          full_name: string
+          id: string
+          mobile: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          data?: Json
+          email?: string | null
+          full_name: string
+          id?: string
+          mobile: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          data?: Json
+          email?: string | null
+          full_name?: string
+          id?: string
+          mobile?: string
+        }
+        Relationships: []
+      }
       exams: {
         Row: {
           created_at: string

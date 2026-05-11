@@ -16,6 +16,7 @@ export const Navbar = () => {
     { path: '/mock-test', label: t('nav.mocktest') },
     { path: '/career', label: t('nav.career') },
     { path: '/library', label: t('nav.library') },
+    { path: '/consultancy', label: t('nav.consultancy') },
     { path: '/stationery', label: t('nav.stationery') },
     { path: '/about', label: t('nav.about') },
     { path: '/contact', label: t('nav.contact') },

@@ -20,6 +20,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.contact': 'Contact',
     'nav.admin': 'Admin',
     'nav.mocktest': 'Mock Test',
+    'nav.consultancy': 'Consultancy',
     
     // Hero Section
     'hero.title': 'Your Future Needs Direction, Not Confusion',
@@ -149,6 +150,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.contact': 'संपर्क',
     'nav.admin': 'एडमिन',
     'nav.mocktest': 'मॉक टेस्ट',
+    'nav.consultancy': 'कंसल्टेंसी',
     
     // Hero Section
     'hero.title': 'आपके भविष्य को दिशा चाहिए, भ्रम नहीं',

@@ -13,6 +13,7 @@ import Stationery from "./pages/Stationery";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import MockTest from "./pages/MockTest";
+import Consultancy from "./pages/Consultancy";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import NotFound from "./pages/NotFound";
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/stationery" element={<Stationery />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/consultancy" element={<Consultancy />} />
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
