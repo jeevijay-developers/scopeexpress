@@ -20,6 +20,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.contact': 'Contact',
     'nav.admin': 'Admin',
     'nav.mocktest': 'Mock Test',
+    'nav.consultancy': 'Consultancy',
     
     // Hero Section
     'hero.title': 'Your Future Needs Direction, Not Confusion',
