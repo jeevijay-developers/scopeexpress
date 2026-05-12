@@ -129,7 +129,7 @@ const Consultancy = () => {
               <div className="space-y-1.5">
                 <Label>Gender</Label>
                 <RadioGroup className="flex flex-wrap gap-4" value={form.gender || ''} onValueChange={(v) => set('gender', v)}>
-                  {['Male', 'Female', 'Married', 'Unmarried'].map((g) => (
+                  {['Male', 'Female'].map((g) => (
                     <div key={g} className="flex items-center gap-2">
                       <RadioGroupItem value={g} id={`g-${g}`} />
                       <Label htmlFor={`g-${g}`} className="font-normal">{g}</Label>
