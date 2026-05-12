@@ -12,6 +12,30 @@ import { toast } from 'sonner';
 
 type Category = 'job' | 'admission' | 'other' | null;
 
+interface FieldProps {
+  name: string;
+  label: string;
+  type?: string;
+  required?: boolean;
+  textarea?: boolean;
+  placeholder?: string;
+  value: string;
+  onChange: (v: string) => void;
+}
+
+const Field = ({ name, label, type = 'text', required = false, textarea = false, placeholder = '', value, onChange }: FieldProps) => (
+  <div className="space-y-1.5">
+    <Label htmlFor={name}>
+      {label} {required && <span className="text-destructive">*</span>}
+    </Label>
+    {textarea ? (
+      <Textarea id={name} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} required={required} />
+    ) : (
+      <Input id={name} type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} required={required} />
+    )}
+  </div>
+);
+
 const Consultancy = () => {
   const [category, setCategory] = useState<Category>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -50,17 +74,8 @@ const Consultancy = () => {
     reset();
   };
 
-  const Field = ({ name, label, type = 'text', required = false, textarea = false, placeholder = '' }: any) => (
-    <div className="space-y-1.5">
-      <Label htmlFor={name}>
-        {label} {required && <span className="text-destructive">*</span>}
-      </Label>
-      {textarea ? (
-        <Textarea id={name} value={form[name] || ''} onChange={(e) => set(name, e.target.value)} placeholder={placeholder} required={required} />
-      ) : (
-        <Input id={name} type={type} value={form[name] || ''} onChange={(e) => set(name, e.target.value)} placeholder={placeholder} required={required} />
-      )}
-    </div>
+  const f = (name: string, label: string, opts: Partial<FieldProps> = {}) => (
+    <Field name={name} label={label} value={form[name] || ''} onChange={(v) => set(name, v)} {...opts} />
   );
 
   if (!category) {
@@ -109,7 +124,7 @@ const Consultancy = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <Field name="full_name" label="Candidate Full Name" required />
+              {f('full_name', 'Candidate Full Name', { required: true })}
 
               <div className="space-y-1.5">
                 <Label>Gender</Label>
@@ -123,14 +138,14 @@ const Consultancy = () => {
                 </RadioGroup>
               </div>
 
-              <Field name="mobile" label="Mobile Number" type="tel" required />
-              <Field name="home_address" label="Home Land Line / Mobile Number" />
-              <Field name="permanent_address" label="Permanent Address" textarea />
-              <Field name="current_address" label="Current Address" textarea />
-              <Field name="email" label="Email ID (In Capital Letter)" type="email" />
-              <Field name="dob" label="Date of Birth" type="date" />
-              <Field name="languages" label="Language Knowledge" placeholder="e.g. Hindi, English" />
-              <Field name="education" label="Education Detail" textarea />
+              {f('mobile', 'Mobile Number', { type: 'tel', required: true })}
+              {f('home_address', 'Home Land Line / Mobile Number')}
+              {f('permanent_address', 'Permanent Address', { textarea: true })}
+              {f('current_address', 'Current Address', { textarea: true })}
+              {f('email', 'Email ID (In Capital Letter)', { type: 'email' })}
+              {f('dob', 'Date of Birth', { type: 'date' })}
+              {f('languages', 'Language Knowledge', { placeholder: 'e.g. Hindi, English' })}
+              {f('education', 'Education Detail', { textarea: true })}
 
               {category === 'job' && (
                 <>
@@ -145,33 +160,33 @@ const Consultancy = () => {
                       ))}
                     </RadioGroup>
                   </div>
-                  <Field name="employer" label="Employer / Company Name" />
-                  <Field name="designation" label="Designation" />
-                  <Field name="current_salary" label="Salary (Monthly)" />
-                  <Field name="expected_salary" label="Expected Salary (Monthly)" />
-                  <Field name="notice_period" label="Notice Period (Days)" />
-                  <Field name="looking_for" label="I am Looking For Job Like" textarea />
+                  {f('employer', 'Employer / Company Name')}
+                  {f('designation', 'Designation')}
+                  {f('current_salary', 'Salary (Monthly)')}
+                  {f('expected_salary', 'Expected Salary (Monthly)')}
+                  {f('notice_period', 'Notice Period (Days)')}
+                  {f('looking_for', 'I am Looking For Job Like', { textarea: true })}
                 </>
               )}
 
               {category === 'admission' && (
                 <>
-                  <Field name="course_interest" label="Course / Class Interested In" required />
-                  <Field name="preferred_institute" label="Preferred Institute / College" />
-                  <Field name="last_qualification" label="Last Qualification & Percentage" />
-                  <Field name="passing_year" label="Year of Passing" />
-                  <Field name="board_university" label="Board / University" />
-                  <Field name="preferred_location" label="Preferred Location" />
-                  <Field name="budget" label="Budget (Annual Fees)" />
-                  <Field name="notes" label="Additional Notes" textarea />
+                  {f('course_interest', 'Course / Class Interested In', { required: true })}
+                  {f('preferred_institute', 'Preferred Institute / College')}
+                  {f('last_qualification', 'Last Qualification & Percentage')}
+                  {f('passing_year', 'Year of Passing')}
+                  {f('board_university', 'Board / University')}
+                  {f('preferred_location', 'Preferred Location')}
+                  {f('budget', 'Budget (Annual Fees)')}
+                  {f('notes', 'Additional Notes', { textarea: true })}
                 </>
               )}
 
               {category === 'other' && (
                 <>
-                  <Field name="enquiry_topic" label="Enquiry Topic" required />
-                  <Field name="preferred_contact_time" label="Preferred Contact Time" />
-                  <Field name="message" label="Tell us how we can help" textarea required />
+                  {f('enquiry_topic', 'Enquiry Topic', { required: true })}
+                  {f('preferred_contact_time', 'Preferred Contact Time')}
+                  {f('message', 'Tell us how we can help', { textarea: true, required: true })}
                 </>
               )}
 
