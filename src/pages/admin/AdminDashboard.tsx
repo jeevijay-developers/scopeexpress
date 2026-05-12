@@ -19,6 +19,7 @@ import QuestionManager from '@/components/admin/QuestionManager';
 import LibraryManager from '@/components/admin/LibraryManager';
 import LibraryLocationsManager from '@/components/admin/LibraryLocationsManager';
 import MockTestManager from '@/components/admin/MockTestManager';
+import ConsultancyTable from '@/components/admin/ConsultancyTable';
 
 interface Lead {
   id: string;
@@ -62,6 +63,7 @@ const menuItems = [
   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
   { id: 'questions', label: 'Question Bank', icon: HelpCircle },
   { id: 'mocktests', label: 'Mock Tests', icon: FileText },
+  { id: 'consultancy', label: 'Consultancy', icon: MessageSquare },
 ];
 
 const AdminDashboard = () => {
@@ -149,6 +151,8 @@ const AdminDashboard = () => {
         return <QuestionManager />;
       case 'mocktests':
         return <MockTestManager />;
+      case 'consultancy':
+        return <ConsultancyTable />;
       default:
         return <LeadsTable leads={leads} quizSessions={quizSessions} isLoading={isLoading} />;
     }
