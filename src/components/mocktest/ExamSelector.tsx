@@ -37,7 +37,8 @@ const ExamSelector = ({ onSelectExam }: ExamSelectorProps) => {
     queryFn: async () => {
       const { data } = await supabase
         .from('mock_tests')
-        .select('exam_name');
+        .select('exam_name')
+        .eq('is_active', true);
       const counts: Record<string, number> = {};
       data?.forEach(t => {
         counts[t.exam_name] = (counts[t.exam_name] || 0) + 1;
@@ -46,7 +47,14 @@ const ExamSelector = ({ onSelectExam }: ExamSelectorProps) => {
     },
   });
 
-  const filtered = examCategories.filter(e =>
+  // Merge hardcoded categories with any additional exams found in the database
+  const knownNames = new Set(examCategories.map(e => e.name));
+  const extraExams = Object.keys(testCounts || {})
+    .filter(name => !knownNames.has(name))
+    .map(name => ({ name, icon: BookOpen, color: 'bg-primary' }));
+  const allExams = [...examCategories, ...extraExams];
+
+  const filtered = allExams.filter(e =>
     e.name.toLowerCase().includes(search.toLowerCase())
   );
 
